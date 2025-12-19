@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Practice Scalability Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
     <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
 
     <script>
         tailwind.config = {
@@ -21,9 +21,16 @@
         }
     </script>
     <style>
-        body { background-color: #0f1115; color: #f3f4f6; }
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #374151; border-radius: 10px; }
+        body { background-color: #0f1115; color: #f3f4f6; margin: 0; font-family: sans-serif; }
+        #root:empty::before {
+            content: "Loading Engine...";
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: #f8cc74;
+            font-family: monospace;
+        }
     </style>
 </head>
 <body>
@@ -47,8 +54,13 @@
                     const recurring = pts * fee;
                     const oneTime = growth * setupFee;
                     const total = recurring + oneTime;
-                    const weeklyHours = (pts * hours / 3) / 4.33;
-                    return { month: i + 1, revenue: total, patients: pts, weeklyHours: Math.round(weeklyHours) };
+                    const weeklyHours = (pts * (hours / 3)) / 4.33;
+                    return { 
+                        month: i + 1, 
+                        revenue: total, 
+                        patients: pts, 
+                        weeklyHours: Math.round(weeklyHours) 
+                    };
                 });
             }, [growth, fee, setupFee, hours]);
 
@@ -59,35 +71,35 @@
                 <div className="min-h-screen p-4 md:p-12">
                     <div className="max-w-6xl mx-auto">
                         <header className="mb-12 border-l-4 border-brand pl-6">
-                            <h1 className="text-4xl font-black tracking-tighter uppercase italic">Practice <span className="text-brand">Scalability</span></h1>
-                            <p className="text-gray-500 font-medium">3-Year Growth & Capacity Modeling</p>
+                            <h1 className="text-4xl font-black tracking-tighter uppercase italic">
+                                Scalability <span className="text-brand">Engine</span>
+                            </h1>
+                            <p className="text-gray-500 font-medium italic">Projected Practice Growth</p>
                         </header>
 
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                            {/* Controls */}
-                            <div className="lg:col-span-4 bg-[#1a1d23] p-8 rounded-3xl border border-gray-800 space-y-6">
-                                <h2 className="text-brand font-bold uppercase text-xs tracking-widest mb-4">Configuration</h2>
-                                
-                                <div className="space-y-4">
-                                    <Input label="New Patients / Month" val={growth} set={setGrowth} />
-                                    <Input label="Monthly Fee ($)" val={fee} set={setFee} />
-                                    <Input label="One-Time Setup Fee ($)" val={setupFee} set={setSetupFee} />
-                                    <Input label="Hours per Patient / Quarter" val={hours} set={setHours} step="0.5" />
-                                    <Input label="Weekly Work Limit (Hrs)" val={maxHours} set={setMaxHours} />
-                                </div>
+                            {/* Controls Panel */}
+                            <div className="lg:col-span-4 bg-[#1a1d23] p-8 rounded-3xl border border-gray-800 space-y-6 shadow-2xl">
+                                <h2 className="text-brand font-bold uppercase text-[10px] tracking-widest mb-4">Configuration</h2>
+                                <Input label="New Patients / Month" val={growth} set={setGrowth} />
+                                <Input label="Monthly Subscription ($)" val={fee} set={setFee} />
+                                <Input label="One-Time Intake Fee ($)" val={setupFee} set={setSetupFee} />
+                                <Input label="Hours per Pt / Quarter" val={hours} set={setHours} step="0.5" />
+                                <Input label="Max Weekly Hours" val={maxHours} set={setMaxHours} />
                             </div>
 
-                            {/* Dashboard */}
+                            {/* Dashboard Stats */}
                             <div className="lg:col-span-8 space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <Stat cardLabel="Effective Hourly Rate" value={`$${hourlyRate}`} />
-                                    <Stat cardLabel="Patient Capacity" value={capacity} />
-                                    <Stat cardLabel="Year 3 Monthly Rev" value={`$${data[35].revenue.toLocaleString()}`} />
+                                    <Stat label="Hourly Rate" value={`$${hourlyRate}`} />
+                                    <Stat label="Patient Cap" value={capacity} />
+                                    <Stat label="Year 3 Revenue" value={`$${data[35].revenue.toLocaleString()}/mo`} />
                                 </div>
 
-                                <div className="bg-[#1a1d23] p-8 rounded-3xl border border-gray-800 h-[400px]">
+                                {/* Graph Area */}
+                                <div className="bg-[#1a1d23] p-8 rounded-3xl border border-gray-800 h-[400px] shadow-xl">
                                     <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={data}>
+                                        <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                                             <defs>
                                                 <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
                                                     <stop offset="5%" stopColor="#f8cc74" stopOpacity={0.3}/>
@@ -95,9 +107,9 @@
                                                 </linearGradient>
                                             </defs>
                                             <CartesianGrid strokeDasharray="3 3" stroke="#2d3139" vertical={false} />
-                                            <XAxis dataKey="month" stroke="#4b5563" fontSize={10} />
-                                            <YAxis stroke="#4b5563" fontSize={10} tickFormatter={v => `$${v/1000}k`} />
-                                            <Tooltip contentStyle={{ backgroundColor: '#0f1115', border: '1px solid #374151' }} />
+                                            <XAxis dataKey="month" stroke="#4b5563" fontSize={10} tick={{fill: '#4b5563'}} />
+                                            <YAxis stroke="#4b5563" fontSize={10} tick={{fill: '#4b5563'}} tickFormatter={v => `$${v/1000}k`} />
+                                            <Tooltip contentStyle={{ backgroundColor: '#0f1115', border: '1px solid #374151', borderRadius: '10px' }} />
                                             <Area type="monotone" dataKey="revenue" stroke="#f8cc74" strokeWidth={3} fill="url(#colorRev)" />
                                         </AreaChart>
                                     </ResponsiveContainer>
@@ -111,20 +123,21 @@
 
         const Input = ({ label, val, set, step = "1" }) => (
             <div className="space-y-1">
-                <label className="text-[10px] text-gray-500 font-bold uppercase">{label}</label>
+                <label className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">{label}</label>
                 <input type="number" step={step} value={val} onChange={e => set(Number(e.target.value))}
-                    className="w-full bg-[#0f1115] border border-gray-700 rounded-xl p-3 text-brand focus:border-brand outline-none font-mono" />
+                    className="w-full bg-[#0f1115] border border-gray-700 rounded-xl p-3 text-brand focus:border-brand outline-none font-mono text-sm" />
             </div>
         );
 
-        const Stat = ({ cardLabel, value }) => (
-            <div className="bg-[#1a1d23] p-5 rounded-2xl border border-gray-800">
-                <div className="text-[10px] text-gray-400 uppercase font-bold mb-1">{cardLabel}</div>
-                <div className="text-2xl font-bold text-white">{value}</div>
+        const Stat = ({ label, value }) => (
+            <div className="bg-[#1a1d23] p-6 rounded-2xl border border-gray-800 border-b-2 border-b-brand/20">
+                <div className="text-[9px] text-gray-500 uppercase font-black tracking-widest mb-1">{label}</div>
+                <div className="text-2xl font-bold text-white tracking-tighter">{value}</div>
             </div>
         );
 
-        const root = ReactDOM.createRoot(document.getElementById('root'));
+        const container = document.getElementById('root');
+        const root = ReactDOM.createRoot(container);
         root.render(<App />);
     </script>
 </body>

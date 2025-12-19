@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Practice Scalability Engine</title>
+    <title>Provider Pro | Practice Scalability Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -16,76 +16,122 @@
         }
     </script>
     <style>
-        body { background-color: #0f1115; color: #f3f4f6; font-family: sans-serif; }
-        .stat-card { background: #1a1d23; border: 1px solid #2d3139; border-radius: 1rem; padding: 1.5rem; }
-        input { background: #0f1115 !important; border: 1px solid #374151 !important; color: #f8cc74 !important; }
+        body { background-color: #0f1115; color: #f3f4f6; font-family: 'Inter', sans-serif; }
+        .input-card { background: #1a1d23; border: 1px solid #2d3139; border-radius: 1.5rem; padding: 1.5rem; }
+        .metric-card { background: #1a1d23; border: 1px solid #2d3139; border-radius: 1rem; padding: 1.25rem; border-left: 4px solid #f8cc74; }
+        input { background: #0f1115 !important; border: 1px solid #374151 !important; color: #f8cc74 !important; width: 100%; padding: 0.75rem; border-radius: 0.75rem; font-family: monospace; }
         input:focus { border-color: #f8cc74 !important; outline: none; }
-        .tooltip-box { display: none; position: absolute; background: #000; color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 11px; width: 150px; z-index: 100; border: 1px solid #f8cc74; }
-        .has-tooltip:hover .tooltip-box { display: block; }
+        .label-text { font-size: 0.7rem; color: #9ca3af; font-weight: 800; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.25rem; display: block; }
+        .tooltip { cursor: help; border-bottom: 1px dotted #4b5563; }
     </style>
 </head>
-<body class="p-4 md:p-12">
+<body class="p-4 md:p-10">
 
-    <div class="max-w-6xl mx-auto">
-        <header class="mb-10 border-l-4 border-brand pl-6">
-            <h1 class="text-3xl font-black uppercase italic tracking-tighter">Scalability <span class="text-brand">Engine</span></h1>
-            <p class="text-gray-500 text-sm">3-Year Growth & Revenue Projection</p>
+    <div class="max-w-7xl mx-auto">
+        <header class="mb-10 flex justify-between items-end">
+            <div>
+                <h1 class="text-3xl font-black italic tracking-tighter uppercase">Provider<span class="text-brand">Pro</span></h1>
+                <p class="text-gray-500 text-sm">Clinical Practice Unit Economics & Scalability</p>
+            </div>
+            <div class="text-right hidden md:block">
+                <p class="text-[10px] text-gray-500 uppercase font-bold tracking-widest">36-Month Forecast</p>
+                <p id="current-date" class="text-xs text-brand"></p>
+            </div>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <div class="lg:col-span-4 bg-[#1a1d23] p-6 rounded-3xl border border-gray-800 h-fit space-y-5">
-                <h2 class="text-brand text-[10px] font-bold uppercase tracking-widest mb-4">Live Configuration</h2>
-                
-                <div>
-                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1 has-tooltip relative">
-                        New Patients / Month ⓘ
-                        <span class="tooltip-box">How many new patients you sign up every single month.</span>
-                    </label>
-                    <input type="number" id="growth" value="30" class="w-full p-3 rounded-xl font-mono">
+            <div class="lg:col-span-3 space-y-4">
+                <div class="input-card">
+                    <h2 class="text-brand text-[10px] font-black uppercase tracking-widest mb-6 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-brand rounded-full"></span> Acquisition & Fees
+                    </h2>
+                    
+                    <div class="space-y-4">
+                        <div>
+                            <label class="label-text tooltip" title="New patients added per month">New Pts/Mo</label>
+                            <input type="number" id="growth" value="30">
+                        </div>
+                        <div>
+                            <label class="label-text tooltip" title="One-time fee for the first month">Intake Fee ($)</label>
+                            <input type="number" id="setupFee" value="500">
+                        </div>
+                        <div>
+                            <label class="label-text">Subscription Fee ($)</label>
+                            <input type="number" id="fee" value="90">
+                        </div>
+                        <div>
+                            <label class="label-text tooltip" title="Percentage of patients who leave each month">Monthly Churn (%)</label>
+                            <input type="number" id="churn" value="2" step="0.1">
+                        </div>
+                    </div>
                 </div>
 
-                <div>
-                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">Monthly Subscription ($)</label>
-                    <input type="number" id="fee" value="90" class="w-full p-3 rounded-xl font-mono">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1 has-tooltip relative">
-                        One-Time Program Fee ($) ⓘ
-                        <span class="tooltip-box">Upfront cost paid by new patients in their first month.</span>
-                    </label>
-                    <input type="number" id="setupFee" value="500" class="w-full p-3 rounded-xl font-mono">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">Hours / Patient / Quarter</label>
-                    <input type="number" id="hours" value="1" step="0.5" class="w-full p-3 rounded-xl font-mono">
-                </div>
-
-                <div>
-                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">Max Weekly Hours Limit</label>
-                    <input type="number" id="maxHours" value="40" class="w-full p-3 rounded-xl font-mono">
+                <div class="input-card">
+                    <h2 class="text-gray-500 text-[10px] font-black uppercase tracking-widest mb-6">Operations</h2>
+                    <div class="space-y-4">
+                        <div>
+                            <label class="label-text">Hours/Quarter/Patient</label>
+                            <input type="number" id="hours" value="1" step="0.5">
+                        </div>
+                        <div>
+                            <label class="label-text">Weekly Work Limit</label>
+                            <input type="number" id="maxHours" value="40">
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-8 space-y-6">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="stat-card">
-                        <p class="text-[9px] text-gray-500 uppercase font-black mb-1">Effective Hourly Rate</p>
-                        <p id="stat-hourly" class="text-2xl font-bold text-white tracking-tighter">$0</p>
+            <div class="lg:col-span-9 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="metric-card">
+                        <p class="label-text">LTV (Lifetime Value)</p>
+                        <p id="stat-ltv" class="text-xl font-bold text-white">$0</p>
+                        <p class="text-[9px] text-gray-500 mt-1">Expected revenue per patient</p>
                     </div>
-                    <div class="stat-card">
-                        <p class="text-[9px] text-gray-500 uppercase font-black mb-1">Max Patient Capacity</p>
-                        <p id="stat-capacity" class="text-2xl font-bold text-white tracking-tighter">0</p>
+                    <div class="metric-card">
+                        <p class="label-text">Steady State Capacity</p>
+                        <p id="stat-cap" class="text-xl font-bold text-white">0</p>
+                        <p class="text-[9px] text-gray-500 mt-1">Based on churn vs growth</p>
                     </div>
-                    <div class="stat-card border-b-brand/40 border-b-2">
-                        <p class="text-[9px] text-gray-500 uppercase font-black mb-1">Year 3 Monthly Rev</p>
-                        <p id="stat-revenue" class="text-2xl font-bold text-white tracking-tighter">$0</p>
+                    <div class="metric-card">
+                        <p class="label-text">Hourly Efficiency</p>
+                        <p id="stat-hourly" class="text-xl font-bold text-white">$0</p>
+                        <p class="text-[9px] text-gray-500 mt-1">Revenue per clinical hour</p>
+                    </div>
+                    <div class="metric-card">
+                        <p class="label-text">ARR (Year 3)</p>
+                        <p id="stat-arr" class="text-xl font-bold text-white">$0</p>
+                        <p class="text-[9px] text-gray-500 mt-1">Annual Recurring Revenue</p>
                     </div>
                 </div>
 
-                <div class="bg-[#1a1d23] p-6 rounded-3xl border border-gray-800 shadow-2xl h-[400px]">
-                    <canvas id="revenueChart"></canvas>
+                <div class="bg-[#1a1d23] p-6 rounded-3xl border border-gray-800 shadow-2xl">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="text-[10px] font-black uppercase tracking-widest text-gray-400">Revenue Mix: Subscription vs intake</h3>
+                        <div class="flex gap-4">
+                            <div class="flex items-center gap-1.5"><div class="w-2 h-2 bg-brand rounded-full"></div><span class="text-[9px] uppercase font-bold text-gray-500">Subscription</span></div>
+                            <div class="flex items-center gap-1.5"><div class="w-2 h-2 bg-gray-500 rounded-full"></div><span class="text-[9px] uppercase font-bold text-gray-500">Intake Fees</span></div>
+                        </div>
+                    </div>
+                    <div class="h-[300px]">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="bg-[#1a1d23] rounded-2xl border border-gray-800 overflow-hidden">
+                    <table class="w-full text-left text-xs text-gray-400">
+                        <thead class="bg-[#2d3139] text-[9px] uppercase font-black text-gray-500 tracking-widest">
+                            <tr>
+                                <th class="p-4">Period</th>
+                                <th class="p-4">Patient Count</th>
+                                <th class="p-4">Intake Revenue</th>
+                                <th class="p-4">Subscription Revenue</th>
+                                <th class="p-4">Total Cash Flow</th>
+                            </tr>
+                        </thead>
+                        <tbody id="data-table">
+                            </tbody>
+                    </table>
                 </div>
             </div>
         </div>
@@ -95,78 +141,106 @@
         const ctx = document.getElementById('revenueChart').getContext('2d');
         let chart;
 
-        function calculate() {
+        function updateData() {
             const growth = parseFloat(document.getElementById('growth').value) || 0;
-            const fee = parseFloat(document.getElementById('fee').value) || 0;
-            const setupFee = parseFloat(document.getElementById('setupFee').value) || 0;
-            const hours = parseFloat(document.getElementById('hours').value) || 1;
-            const maxHours = parseFloat(document.getElementById('maxHours').value) || 40;
+            const intakeFee = parseFloat(document.getElementById('setupFee').value) || 0;
+            const subFee = parseFloat(document.getElementById('fee').value) || 0;
+            const churn = (parseFloat(document.getElementById('churn').value) || 0) / 100;
+            const clinicalHoursPerQuarter = parseFloat(document.getElementById('hours').value) || 1;
+            const maxWorkHours = parseFloat(document.getElementById('maxHours').value) || 40;
 
+            let pts = 0;
             const labels = [];
-            const revenueData = [];
-            let totalPatients = 0;
+            const subData = [];
+            const intakeData = [];
+            const tableBody = document.getElementById('data-table');
+            tableBody.innerHTML = '';
 
             for (let i = 1; i <= 36; i++) {
-                totalPatients += growth;
-                const recurring = totalPatients * fee;
-                const oneTime = growth * setupFee;
-                const monthlyTotal = recurring + oneTime;
+                // Churn calculation: existing patients leave, then new ones arrive
+                pts = (pts * (1 - churn)) + growth;
+                
+                const currentIntakeRev = growth * intakeFee;
+                const currentSubRev = pts * subFee;
                 
                 labels.push('M' + i);
-                revenueData.push(monthlyTotal);
+                intakeData.push(currentIntakeRev);
+                subData.push(currentSubRev);
+
+                // Add rows for key milestones
+                if (i === 1 || i === 12 || i === 24 || i === 36) {
+                    const row = `
+                        <tr class="border-t border-gray-800">
+                            <td class="p-4 font-bold text-gray-300">Month ${i}</td>
+                            <td class="p-4">${Math.round(pts)}</td>
+                            <td class="p-4 text-gray-500">$${currentIntakeRev.toLocaleString()}</td>
+                            <td class="p-4 text-brand font-medium">$${Math.round(currentSubRev).toLocaleString()}</td>
+                            <td class="p-4 font-bold text-white">$${Math.round(currentIntakeRev + currentSubRev).toLocaleString()}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += row;
+                }
             }
 
-            // Stats
-            const capacity = Math.floor((maxHours * 4.33 * 3) / hours);
-            const hourlyRate = (fee * 3) / hours;
-            const year3Rev = revenueData[35];
+            // High-Level Provider Metrics
+            const averageTenureMonths = churn === 0 ? 36 : 1 / churn;
+            const ltv = intakeFee + (subFee * averageTenureMonths);
+            const hourlyRate = (subFee * 3) / clinicalHoursPerQuarter;
+            const year3Monthly = subData[35] + intakeData[35];
+            const maxCap = growth / churn; // The mathematical ceiling where growth = churn
 
-            document.getElementById('stat-hourly').innerText = '$' + Math.round(hourlyRate);
-            document.getElementById('stat-capacity').innerText = capacity.toLocaleString();
-            document.getElementById('stat-revenue').innerText = '$' + Math.round(year3Rev).toLocaleString();
+            document.getElementById('stat-ltv').innerText = '$' + Math.round(ltv).toLocaleString();
+            document.getElementById('stat-cap').innerText = isFinite(maxCap) ? Math.round(maxCap).toLocaleString() : '∞';
+            document.getElementById('stat-hourly').innerText = '$' + Math.round(hourlyRate).toLocaleString();
+            document.getElementById('stat-arr').innerText = '$' + Math.round(subData[35] * 12).toLocaleString();
 
-            updateChart(labels, revenueData);
+            renderChart(labels, intakeData, subData);
         }
 
-        function updateChart(labels, data) {
+        function renderChart(labels, intake, sub) {
             if (chart) chart.destroy();
             chart = new Chart(ctx, {
                 type: 'line',
                 data: {
                     labels: labels,
-                    datasets: [{
-                        label: 'Monthly Revenue ($)',
-                        data: data,
-                        borderColor: '#f8cc74',
-                        backgroundColor: 'rgba(248, 204, 116, 0.1)',
-                        fill: true,
-                        tension: 0.4,
-                        borderWidth: 3,
-                        pointRadius: 0
-                    }]
+                    datasets: [
+                        {
+                            label: 'Subscription Revenue',
+                            data: sub,
+                            borderColor: '#f8cc74',
+                            backgroundColor: 'rgba(248, 204, 116, 0.4)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            stack: 'combined'
+                        },
+                        {
+                            label: 'Intake Revenue',
+                            data: intake,
+                            borderColor: '#4b5563',
+                            backgroundColor: 'rgba(75, 85, 99, 0.4)',
+                            fill: true,
+                            tension: 0.4,
+                            pointRadius: 0,
+                            stack: 'combined'
+                        }
+                    ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: { legend: { display: false } },
                     scales: {
-                        y: { 
-                            grid: { color: '#2d3139' },
-                            ticks: { color: '#4b5563', callback: v => '$' + v/1000 + 'k' }
-                        },
+                        y: { stacked: true, grid: { color: '#2d3139' }, ticks: { color: '#4b5563', callback: v => '$' + v/1000 + 'k' } },
                         x: { grid: { display: false }, ticks: { color: '#4b5563' } }
                     }
                 }
             });
         }
 
-        // Listen for changes
-        document.querySelectorAll('input').forEach(input => {
-            input.addEventListener('input', calculate);
-        });
-
-        // Initial build
-        calculate();
+        document.querySelectorAll('input').forEach(inp => inp.addEventListener('input', updateData));
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+        updateData();
     </script>
 </body>
 </html>

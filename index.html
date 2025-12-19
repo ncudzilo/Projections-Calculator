@@ -5,12 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Practice Scalability Engine</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/prop-types/15.8.1/prop-types.min.js"></script>
-    <script src="https://unpkg.com/recharts/umd/Recharts.js"></script>
-
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         tailwind.config = {
             theme: {
@@ -21,124 +16,157 @@
         }
     </script>
     <style>
-        body { background-color: #0f1115; color: #f3f4f6; margin: 0; font-family: sans-serif; }
-        #root:empty::before {
-            content: "Loading Engine...";
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: #f8cc74;
-            font-family: monospace;
-        }
+        body { background-color: #0f1115; color: #f3f4f6; font-family: sans-serif; }
+        .stat-card { background: #1a1d23; border: 1px solid #2d3139; border-radius: 1rem; padding: 1.5rem; }
+        input { background: #0f1115 !important; border: 1px solid #374151 !important; color: #f8cc74 !important; }
+        input:focus { border-color: #f8cc74 !important; outline: none; }
+        .tooltip-box { display: none; position: absolute; background: #000; color: #fff; padding: 5px 10px; border-radius: 4px; font-size: 11px; width: 150px; z-index: 100; border: 1px solid #f8cc74; }
+        .has-tooltip:hover .tooltip-box { display: block; }
     </style>
 </head>
-<body>
-    <div id="root"></div>
+<body class="p-4 md:p-12">
 
-    <script type="text/babel">
-        const { useState, useMemo } = React;
-        const { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } = Recharts;
+    <div class="max-w-6xl mx-auto">
+        <header class="mb-10 border-l-4 border-brand pl-6">
+            <h1 class="text-3xl font-black uppercase italic tracking-tighter">Scalability <span class="text-brand">Engine</span></h1>
+            <p class="text-gray-500 text-sm">3-Year Growth & Revenue Projection</p>
+        </header>
 
-        const App = () => {
-            const [growth, setGrowth] = useState(30);
-            const [fee, setFee] = useState(90);
-            const [setupFee, setSetupFee] = useState(500);
-            const [hours, setHours] = useState(1);
-            const [maxHours, setMaxHours] = useState(40);
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <div class="lg:col-span-4 bg-[#1a1d23] p-6 rounded-3xl border border-gray-800 h-fit space-y-5">
+                <h2 class="text-brand text-[10px] font-bold uppercase tracking-widest mb-4">Live Configuration</h2>
+                
+                <div>
+                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1 has-tooltip relative">
+                        New Patients / Month ⓘ
+                        <span class="tooltip-box">How many new patients you sign up every single month.</span>
+                    </label>
+                    <input type="number" id="growth" value="30" class="w-full p-3 rounded-xl font-mono">
+                </div>
 
-            const data = useMemo(() => {
-                let pts = 0;
-                return Array.from({ length: 36 }, (_, i) => {
-                    pts += growth;
-                    const recurring = pts * fee;
-                    const oneTime = growth * setupFee;
-                    const total = recurring + oneTime;
-                    const weeklyHours = (pts * (hours / 3)) / 4.33;
-                    return { 
-                        month: i + 1, 
-                        revenue: total, 
-                        patients: pts, 
-                        weeklyHours: Math.round(weeklyHours) 
-                    };
-                });
-            }, [growth, fee, setupFee, hours]);
+                <div>
+                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">Monthly Subscription ($)</label>
+                    <input type="number" id="fee" value="90" class="w-full p-3 rounded-xl font-mono">
+                </div>
 
-            const capacity = Math.floor((maxHours * 4.33 * 3) / hours);
-            const hourlyRate = (fee * 3) / hours;
+                <div>
+                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1 has-tooltip relative">
+                        One-Time Program Fee ($) ⓘ
+                        <span class="tooltip-box">Upfront cost paid by new patients in their first month.</span>
+                    </label>
+                    <input type="number" id="setupFee" value="500" class="w-full p-3 rounded-xl font-mono">
+                </div>
 
-            return (
-                <div className="min-h-screen p-4 md:p-12">
-                    <div className="max-w-6xl mx-auto">
-                        <header className="mb-12 border-l-4 border-brand pl-6">
-                            <h1 className="text-4xl font-black tracking-tighter uppercase italic">
-                                Scalability <span className="text-brand">Engine</span>
-                            </h1>
-                            <p className="text-gray-500 font-medium italic">Projected Practice Growth</p>
-                        </header>
+                <div>
+                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">Hours / Patient / Quarter</label>
+                    <input type="number" id="hours" value="1" step="0.5" class="w-full p-3 rounded-xl font-mono">
+                </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                            {/* Controls Panel */}
-                            <div className="lg:col-span-4 bg-[#1a1d23] p-8 rounded-3xl border border-gray-800 space-y-6 shadow-2xl">
-                                <h2 className="text-brand font-bold uppercase text-[10px] tracking-widest mb-4">Configuration</h2>
-                                <Input label="New Patients / Month" val={growth} set={setGrowth} />
-                                <Input label="Monthly Subscription ($)" val={fee} set={setFee} />
-                                <Input label="One-Time Intake Fee ($)" val={setupFee} set={setSetupFee} />
-                                <Input label="Hours per Pt / Quarter" val={hours} set={setHours} step="0.5" />
-                                <Input label="Max Weekly Hours" val={maxHours} set={setMaxHours} />
-                            </div>
+                <div>
+                    <label class="block text-[10px] text-gray-500 font-bold uppercase mb-1">Max Weekly Hours Limit</label>
+                    <input type="number" id="maxHours" value="40" class="w-full p-3 rounded-xl font-mono">
+                </div>
+            </div>
 
-                            {/* Dashboard Stats */}
-                            <div className="lg:col-span-8 space-y-6">
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <Stat label="Hourly Rate" value={`$${hourlyRate}`} />
-                                    <Stat label="Patient Cap" value={capacity} />
-                                    <Stat label="Year 3 Revenue" value={`$${data[35].revenue.toLocaleString()}/mo`} />
-                                </div>
-
-                                {/* Graph Area */}
-                                <div className="bg-[#1a1d23] p-8 rounded-3xl border border-gray-800 h-[400px] shadow-xl">
-                                    <ResponsiveContainer width="100%" height="100%">
-                                        <AreaChart data={data} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                                            <defs>
-                                                <linearGradient id="colorRev" x1="0" y1="0" x2="0" y2="1">
-                                                    <stop offset="5%" stopColor="#f8cc74" stopOpacity={0.3}/>
-                                                    <stop offset="95%" stopColor="#f8cc74" stopOpacity={0}/>
-                                                </linearGradient>
-                                            </defs>
-                                            <CartesianGrid strokeDasharray="3 3" stroke="#2d3139" vertical={false} />
-                                            <XAxis dataKey="month" stroke="#4b5563" fontSize={10} tick={{fill: '#4b5563'}} />
-                                            <YAxis stroke="#4b5563" fontSize={10} tick={{fill: '#4b5563'}} tickFormatter={v => `$${v/1000}k`} />
-                                            <Tooltip contentStyle={{ backgroundColor: '#0f1115', border: '1px solid #374151', borderRadius: '10px' }} />
-                                            <Area type="monotone" dataKey="revenue" stroke="#f8cc74" strokeWidth={3} fill="url(#colorRev)" />
-                                        </AreaChart>
-                                    </ResponsiveContainer>
-                                </div>
-                            </div>
-                        </div>
+            <div class="lg:col-span-8 space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="stat-card">
+                        <p class="text-[9px] text-gray-500 uppercase font-black mb-1">Effective Hourly Rate</p>
+                        <p id="stat-hourly" class="text-2xl font-bold text-white tracking-tighter">$0</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-[9px] text-gray-500 uppercase font-black mb-1">Max Patient Capacity</p>
+                        <p id="stat-capacity" class="text-2xl font-bold text-white tracking-tighter">0</p>
+                    </div>
+                    <div class="stat-card border-b-brand/40 border-b-2">
+                        <p class="text-[9px] text-gray-500 uppercase font-black mb-1">Year 3 Monthly Rev</p>
+                        <p id="stat-revenue" class="text-2xl font-bold text-white tracking-tighter">$0</p>
                     </div>
                 </div>
-            );
-        };
 
-        const Input = ({ label, val, set, step = "1" }) => (
-            <div className="space-y-1">
-                <label className="text-[10px] text-gray-500 font-bold uppercase tracking-tight">{label}</label>
-                <input type="number" step={step} value={val} onChange={e => set(Number(e.target.value))}
-                    className="w-full bg-[#0f1115] border border-gray-700 rounded-xl p-3 text-brand focus:border-brand outline-none font-mono text-sm" />
+                <div class="bg-[#1a1d23] p-6 rounded-3xl border border-gray-800 shadow-2xl h-[400px]">
+                    <canvas id="revenueChart"></canvas>
+                </div>
             </div>
-        );
+        </div>
+    </div>
 
-        const Stat = ({ label, value }) => (
-            <div className="bg-[#1a1d23] p-6 rounded-2xl border border-gray-800 border-b-2 border-b-brand/20">
-                <div className="text-[9px] text-gray-500 uppercase font-black tracking-widest mb-1">{label}</div>
-                <div className="text-2xl font-bold text-white tracking-tighter">{value}</div>
-            </div>
-        );
+    <script>
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        let chart;
 
-        const container = document.getElementById('root');
-        const root = ReactDOM.createRoot(container);
-        root.render(<App />);
+        function calculate() {
+            const growth = parseFloat(document.getElementById('growth').value) || 0;
+            const fee = parseFloat(document.getElementById('fee').value) || 0;
+            const setupFee = parseFloat(document.getElementById('setupFee').value) || 0;
+            const hours = parseFloat(document.getElementById('hours').value) || 1;
+            const maxHours = parseFloat(document.getElementById('maxHours').value) || 40;
+
+            const labels = [];
+            const revenueData = [];
+            let totalPatients = 0;
+
+            for (let i = 1; i <= 36; i++) {
+                totalPatients += growth;
+                const recurring = totalPatients * fee;
+                const oneTime = growth * setupFee;
+                const monthlyTotal = recurring + oneTime;
+                
+                labels.push('M' + i);
+                revenueData.push(monthlyTotal);
+            }
+
+            // Stats
+            const capacity = Math.floor((maxHours * 4.33 * 3) / hours);
+            const hourlyRate = (fee * 3) / hours;
+            const year3Rev = revenueData[35];
+
+            document.getElementById('stat-hourly').innerText = '$' + Math.round(hourlyRate);
+            document.getElementById('stat-capacity').innerText = capacity.toLocaleString();
+            document.getElementById('stat-revenue').innerText = '$' + Math.round(year3Rev).toLocaleString();
+
+            updateChart(labels, revenueData);
+        }
+
+        function updateChart(labels, data) {
+            if (chart) chart.destroy();
+            chart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Monthly Revenue ($)',
+                        data: data,
+                        borderColor: '#f8cc74',
+                        backgroundColor: 'rgba(248, 204, 116, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        borderWidth: 3,
+                        pointRadius: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { 
+                            grid: { color: '#2d3139' },
+                            ticks: { color: '#4b5563', callback: v => '$' + v/1000 + 'k' }
+                        },
+                        x: { grid: { display: false }, ticks: { color: '#4b5563' } }
+                    }
+                }
+            });
+        }
+
+        // Listen for changes
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('input', calculate);
+        });
+
+        // Initial build
+        calculate();
     </script>
 </body>
 </html>

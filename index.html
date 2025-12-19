@@ -36,6 +36,7 @@
             min-height: 100vh;
             color: var(--text-primary);
             overflow-x: hidden;
+            position: relative;
         }
         
         /* Enhanced ambient background */
@@ -64,15 +65,15 @@
             left: 12px;
         }
         
-        .logo-img {
-            height: 48px;
+        .logo-svg {
+            height: 90px;
             width: auto;
             transition: all 0.4s ease;
             filter: drop-shadow(0 0 20px rgba(248, 204, 116, 0.2));
         }
         
-        .logo-container.scrolled .logo-img {
-            height: 32px;
+        .logo-container.scrolled .logo-svg {
+            height: 60px;
         }
         
         .container {
@@ -152,6 +153,8 @@
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+            display: inline-block;
+            vertical-align: middle;
         }
         
         .mini-toggle:hover {
@@ -338,6 +341,107 @@
             grid-column: 1 / -1;
         }
         
+        /* Compact Accordion/Tier Sections */
+        .tier-section {
+            margin-top: 12px;
+            border-top: 1px solid rgba(248, 204, 116, 0.06);
+            padding-top: 12px;
+        }
+        
+        .tier-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 8px 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            border: 1px solid rgba(248, 204, 116, 0.1);
+            transition: all 0.2s ease;
+            margin-bottom: 8px;
+        }
+        
+        .tier-header:hover {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: rgba(248, 204, 116, 0.2);
+        }
+        
+        .tier-header-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .tier-badge {
+            width: 24px;
+            height: 24px;
+            border-radius: 6px;
+            background: linear-gradient(135deg, rgba(248, 204, 116, 0.2) 0%, rgba(248, 204, 116, 0.1) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.65rem;
+            font-weight: 700;
+            color: var(--brand);
+        }
+        
+        .tier-title {
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .tier-chevron {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.2s ease;
+        }
+        
+        .tier-chevron svg {
+            stroke: var(--brand);
+            stroke-width: 2;
+        }
+        
+        .tier-header.active .tier-chevron {
+            transform: rotate(180deg);
+        }
+        
+        .tier-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, opacity 0.2s ease;
+            opacity: 0;
+        }
+        
+        .tier-content.active {
+            max-height: 400px;
+            opacity: 1;
+            margin-bottom: 8px;
+        }
+        
+        .tier-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+        }
+        
+        .tier-inputs .input-group label {
+            font-size: 0.65rem;
+            margin-bottom: 6px;
+        }
+        
+        .tier-inputs .input-group input[type="number"] {
+            padding: 8px 10px;
+            font-size: 0.85rem;
+        }
+        
+        .tier-inputs .input-group input[type="range"] {
+            height: 5px;
+        }
+        
         /* Results */
         .results-section {
             display: flex;
@@ -345,10 +449,10 @@
             gap: 20px;
         }
         
-        /* Insights Bar - Now 6 columns */
+        /* Insights Bar - 7 columns */
         .insights-bar {
             display: grid;
-            grid-template-columns: repeat(6, 1fr);
+            grid-template-columns: repeat(7, 1fr);
             gap: 14px;
         }
         
@@ -374,42 +478,6 @@
         
         .insight-value.positive { color: var(--positive); }
         .insight-value.negative { color: var(--negative); }
-        
-        /* Combined Section */
-        .combined-section {
-            padding: 28px;
-        }
-        
-        .combined-header {
-            text-align: center;
-            margin-bottom: 24px;
-        }
-        
-        .combined-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-        }
-        
-        .combined-subtitle {
-            font-size: 0.65rem;
-            color: var(--text-muted);
-        }
-        
-        .combined-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-        }
-        
-        .combined-card {
-            text-align: center;
-            padding: 20px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 12px;
-            border: 1px solid rgba(248, 204, 116, 0.06);
-        }
         
         /* Metrics */
         .metrics-grid {
@@ -583,7 +651,7 @@
             height: 72px;
             cursor: pointer;
             z-index: 10000;
-            transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s ease;
             perspective: 1000px;
         }
         
@@ -726,7 +794,7 @@
         .tour-orb.touring .tour-orb-glow { inset: -16px; }
         .tour-orb.touring .tour-orb-label { display: none; }
         
-        /* LIQUID GLASS TOOLTIP - Enhanced Translucency */
+        /* LIQUID GLASS TOOLTIP - Faster transitions for mobile */
         .tour-tooltip {
             position: fixed;
             background: linear-gradient(135deg, 
@@ -748,7 +816,7 @@
                 inset 0 -1px 2px rgba(0, 0, 0, 0.2);
             opacity: 0;
             transform: translateY(12px);
-            transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: opacity 0.2s ease, transform 0.2s ease;
             pointer-events: none;
         }
         
@@ -825,7 +893,7 @@
             font-weight: 600;
             font-family: inherit;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
         
         .tour-btn.skip {
@@ -870,7 +938,7 @@
             z-index: 9997;
             opacity: 0;
             pointer-events: none;
-            transition: opacity 0.4s ease;
+            transition: opacity 0.3s ease;
         }
         
         .tour-overlay.visible { opacity: 1; pointer-events: auto; }
@@ -878,28 +946,43 @@
         /* Responsive */
         @media (max-width: 1024px) {
             .input-sections { grid-template-columns: 1fr; }
-            .insights-bar { grid-template-columns: repeat(3, 1fr); }
-            .combined-grid { grid-template-columns: 1fr 1fr; }
+            .insights-bar { grid-template-columns: repeat(4, 1fr); }
         }
         
         @media (max-width: 768px) {
-            .container { padding: 80px 16px 32px 16px; }
+            html { overflow-x: hidden; }
+            body { 
+                overflow-x: hidden; 
+                width: 100%; 
+                position: relative;
+            }
+            .container { 
+                padding: 80px 16px 32px 16px; 
+                width: 100%;
+                max-width: 100%;
+            }
             .page-title { font-size: 1.5rem; }
-            .insights-bar { grid-template-columns: 1fr 1fr; }
+            .insights-bar { grid-template-columns: repeat(2, 1fr); }
             .metrics-grid { grid-template-columns: 1fr; }
             .charts-row { grid-template-columns: 1fr; }
-            .combined-grid { grid-template-columns: 1fr; }
             .logo-container { top: 16px; left: 16px; }
             .logo-container.scrolled { top: 10px; left: 10px; }
-            .logo-img { height: 40px; }
-            .logo-container.scrolled .logo-img { height: 28px; }
+            .logo-svg { height: 70px; }
+            .logo-container.scrolled .logo-svg { height: 50px; }
+            .tour-orb { bottom: 20px; right: 20px; width: 60px; height: 60px; }
+            .tour-orb-label { display: none; }
+            .tour-tooltip { 
+                max-width: calc(100vw - 32px); 
+                left: 16px !important; 
+                right: 16px !important;
+                padding: 20px 24px;
+            }
         }
         
         @media (max-width: 480px) {
             .inputs-grid { grid-template-columns: 1fr; }
+            .tier-inputs { grid-template-columns: 1fr; }
             .insights-bar { grid-template-columns: 1fr; }
-            .tour-tooltip { max-width: calc(100vw - 32px); left: 16px !important; right: 16px !important; }
-            .tour-orb { bottom: 20px; right: 20px; width: 60px; height: 60px; }
             .year-selector { flex-direction: column; }
         }
     </style>
@@ -909,7 +992,7 @@
     
     <!-- Logo -->
     <div class="logo-container" id="logoContainer">
-        <img src="https://images.squarespace-cdn.com/content/67b235ef2dea730361197833/c8e81194-4662-4ff0-806d-e8ba9e2be295/Gold+Logo+2.png?content-type=image%2Fpng" alt="Reneu" class="logo-img">
+        <img src="logo.svg" alt="Reneu" class="logo-svg">
     </div>
     
     <div class="tour-overlay" id="tourOverlay"></div>
@@ -948,7 +1031,7 @@
                     <div class="panel-icon">
                         <svg viewBox="0 0 24 24">
                             <rect x="3" y="6" width="18" height="12" rx="2"/>
-                            <path d="M3 10h18"/>
+                            <path d="M 3 10h18"/>
                             <circle cx="17" cy="14" r="1.5"/>
                         </svg>
                     </div>
@@ -961,7 +1044,7 @@
                     </div>
                     <div class="input-group">
                         <label>Patients/Month: <span id="oldClientsVal">2</span></label>
-                        <input type="range" id="oldClients" min="1" max="50" value="2" step="1">
+                        <input type="range" id="oldClients" min="0" max="50" value="2" step="1">
                     </div>
                     <div class="section-label">Provider Capacity</div>
                     <div class="input-group">
@@ -1003,7 +1086,7 @@
                     </div>
                     <div class="input-group">
                         <label>New Patients/Month: <span id="newClientsSteadyVal">8</span></label>
-                        <input type="range" id="newClientsSteady" min="1" max="100" value="8" step="1">
+                        <input type="range" id="newClientsSteady" min="0" max="100" value="8" step="1">
                     </div>
                     <div class="input-group">
                         <label>Starting Patients: <span id="startingPatientsVal">0</span></label>
@@ -1024,6 +1107,103 @@
                             </div>
                         </label>
                         <input type="number" id="newTimePerPatient" value="0.5" step="0.1" min="0.1">
+                    </div>
+                </div>
+                
+                <!-- Tier Sections - Compact -->
+                <div class="tier-section">
+                    <div class="tier-header" onclick="toggleTier(2)">
+                        <div class="tier-header-content">
+                            <div class="tier-badge">T2</div>
+                            <span class="tier-title">Tier 2</span>
+                        </div>
+                        <div class="tier-chevron">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
+                    <div class="tier-content" id="tier2Content">
+                        <div class="tier-inputs">
+                            <div class="input-group">
+                                <label>Monthly Price ($)</label>
+                                <input type="number" id="tier2Price" value="0" step="5">
+                            </div>
+                            <div class="input-group">
+                                <label>New Patients/Mo: <span id="tier2ClientsVal">0</span></label>
+                                <input type="range" id="tier2Clients" min="0" max="50" value="0" step="1" oninput="document.getElementById('tier2ClientsVal').textContent=this.value">
+                            </div>
+                            <div class="input-group">
+                                <label>Retention Rate: <span id="tier2RetentionVal">85%</span></label>
+                                <input type="range" id="tier2Retention" min="50" max="100" value="85" step="1" oninput="document.getElementById('tier2RetentionVal').textContent=this.value+'%'">
+                            </div>
+                            <div class="input-group">
+                                <label>Hours/Patient/Mo</label>
+                                <input type="number" id="tier2Time" value="0.75" step="0.1" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tier-section">
+                    <div class="tier-header" onclick="toggleTier(3)">
+                        <div class="tier-header-content">
+                            <div class="tier-badge">T3</div>
+                            <span class="tier-title">Tier 3</span>
+                        </div>
+                        <div class="tier-chevron">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
+                    <div class="tier-content" id="tier3Content">
+                        <div class="tier-inputs">
+                            <div class="input-group">
+                                <label>Monthly Price ($)</label>
+                                <input type="number" id="tier3Price" value="0" step="5">
+                            </div>
+                            <div class="input-group">
+                                <label>New Patients/Mo: <span id="tier3ClientsVal">0</span></label>
+                                <input type="range" id="tier3Clients" min="0" max="50" value="0" step="1" oninput="document.getElementById('tier3ClientsVal').textContent=this.value">
+                            </div>
+                            <div class="input-group">
+                                <label>Retention Rate: <span id="tier3RetentionVal">90%</span></label>
+                                <input type="range" id="tier3Retention" min="50" max="100" value="90" step="1" oninput="document.getElementById('tier3RetentionVal').textContent=this.value+'%'">
+                            </div>
+                            <div class="input-group">
+                                <label>Hours/Patient/Mo</label>
+                                <input type="number" id="tier3Time" value="1" step="0.1" min="0">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="tier-section">
+                    <div class="tier-header" onclick="toggleTier(4)">
+                        <div class="tier-header-content">
+                            <div class="tier-badge">T4</div>
+                            <span class="tier-title">Tier 4</span>
+                        </div>
+                        <div class="tier-chevron">
+                            <svg viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+                        </div>
+                    </div>
+                    <div class="tier-content" id="tier4Content">
+                        <div class="tier-inputs">
+                            <div class="input-group">
+                                <label>Monthly Price ($)</label>
+                                <input type="number" id="tier4Price" value="0" step="5">
+                            </div>
+                            <div class="input-group">
+                                <label>New Patients/Mo: <span id="tier4ClientsVal">0</span></label>
+                                <input type="range" id="tier4Clients" min="0" max="50" value="0" step="1" oninput="document.getElementById('tier4ClientsVal').textContent=this.value">
+                            </div>
+                            <div class="input-group">
+                                <label>Retention Rate: <span id="tier4RetentionVal">90%</span></label>
+                                <input type="range" id="tier4Retention" min="50" max="100" value="90" step="1" oninput="document.getElementById('tier4RetentionVal').textContent=this.value+'%'">
+                            </div>
+                            <div class="input-group">
+                                <label>Hours/Patient/Mo</label>
+                                <input type="number" id="tier4Time" value="1.5" step="0.1" min="0">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1051,46 +1231,20 @@
                     <div class="insight-value" id="patientLTV">$540</div>
                 </div>
                 <div class="insight-item glass-panel">
+                    <div class="insight-label">Up-front Rate</div>
+                    <div class="insight-value" id="oldHourlyRate">$75/hr</div>
+                </div>
+                <div class="insight-item glass-panel">
+                    <div class="insight-label">Subscription Rate</div>
+                    <div class="insight-value" id="newHourlyRate">$180/hr</div>
+                </div>
+                <div class="insight-item glass-panel">
                     <div class="insight-label">Up-front Util.</div>
                     <div class="insight-value positive" id="oldUtilization">8%</div>
                 </div>
                 <div class="insight-item glass-panel">
                     <div class="insight-label">Subscription Util.</div>
                     <div class="insight-value positive" id="newUtilization">52%</div>
-                </div>
-                <div class="insight-item glass-panel">
-                    <div class="insight-label">Total Util.</div>
-                    <div class="insight-value" id="totalUtilization">60%</div>
-                </div>
-            </div>
-            
-            <!-- Combined Section -->
-            <div class="combined-section glass-panel" id="tourStep4">
-                <div class="combined-header">
-                    <h3 class="combined-title">Hybrid Model Performance</h3>
-                    <p class="combined-subtitle">Combining both revenue streams</p>
-                </div>
-                <div class="combined-grid">
-                    <div class="combined-card">
-                        <div class="metric-label">Total Revenue</div>
-                        <div class="metric-value" id="combinedRevenue">$53,100</div>
-                        <div class="metric-subtext">Both models</div>
-                    </div>
-                    <div class="combined-card">
-                        <div class="metric-label">Total Income</div>
-                        <div class="metric-value" id="totalIncome">$53,100</div>
-                        <div class="metric-subtext">Period total</div>
-                    </div>
-                    <div class="combined-card">
-                        <div class="metric-label">Total Patients</div>
-                        <div class="metric-value" id="combinedPatients">47</div>
-                        <div class="metric-subtext">Period end</div>
-                    </div>
-                    <div class="combined-card">
-                        <div class="metric-label">Util. Ratio</div>
-                        <div class="metric-value" id="utilizationRatio">23:77</div>
-                        <div class="metric-subtext">Old:New %</div>
-                    </div>
                 </div>
             </div>
             
@@ -1112,7 +1266,7 @@
                 </div>
             </div>
             
-            <div class="charts-row">
+            <div class="charts-row" id="tourStep4">
                 <div class="chart-container glass-panel">
                     <h3>Revenue Comparison</h3>
                     <canvas id="revenueChart"></canvas>
@@ -1201,8 +1355,8 @@
         createParticles();
         
         // State
-        let oldTimePeriod = 'monthly'; // monthly or quarterly
-        let newTimePeriod = 'monthly'; // monthly or quarterly
+        let oldTimePeriod = 'monthly';
+        let newTimePeriod = 'monthly';
         let selectedYear = 1;
         
         // Logo shrink on scroll
@@ -1224,6 +1378,13 @@
             toggle.classList.toggle('active');
             newTimePeriod = toggle.classList.contains('active') ? 'quarterly' : 'monthly';
             calculate();
+        }
+        
+        function toggleTier(tier) {
+            const header = event.currentTarget;
+            const content = document.getElementById(`tier${tier}Content`);
+            header.classList.toggle('active');
+            content.classList.toggle('active');
         }
         
         function selectYear(year) {
@@ -1250,11 +1411,11 @@
         
         // Tour System
         const tourSteps = [
-            { target: 'tourStep0', title: 'Welcome', text: 'Compare revenue and capacity in a hybrid model where providers offer both up-front programs and subscriptions.', position: 'bottom' },
-            { target: 'tourStep1', title: 'Up-front Model', text: 'Configure one-time program pricing with capacity metrics. Toggle hours/patient between monthly and quarterly. Patients/month slider goes up to 50.', position: 'bottom' },
-            { target: 'tourStep2', title: 'Subscription Model', text: 'Set monthly recurring pricing, retention rate (% who stay each month), new patient acquisition rate (up to 100/month), and optional starting patient base. Toggle hours/patient time period.', position: 'top' },
-            { target: 'tourStep3', title: 'Multi-Year View', text: 'Switch between Year 1, 2, and 3 to see long-term compound growth patterns and capacity utilization over time.', position: 'bottom' },
-            { target: 'tourStep4', title: 'Hybrid Analysis', text: 'View combined metrics showing total revenue from both models, patient counts, and utilization ratios demonstrating how the models work together.', position: 'top' }
+            { target: 'tourStep0', title: 'Welcome', text: 'Compare revenue and capacity in a hybrid model where providers offer both up-front programs and subscriptions with multiple tiers.', position: 'bottom' },
+            { target: 'tourStep1', title: 'Up-front Model', text: 'Configure one-time program pricing with capacity metrics. Toggle hours/patient between monthly and quarterly. Patients/month slider goes up to 50. View average hourly rate.', position: 'bottom' },
+            { target: 'tourStep2', title: 'Subscription Model', text: 'Set base tier pricing and expand additional tiers (T2-T4) with unique pricing, retention, and capacity. New patients slider goes up to 100. Track average hourly rates.', position: 'top' },
+            { target: 'tourStep3', title: 'Multi-Year View', text: 'Switch between Year 1, 2, and 3 to see long-term compound growth patterns across all tiers.', position: 'bottom' },
+            { target: 'tourStep4', title: 'Analytics', text: 'View revenue comparisons, patient growth, break-even analysis, and comprehensive metrics across all tiers.', position: 'top' }
         ];
         
         let currentTourStep = 0, tourActive = false;
@@ -1312,7 +1473,7 @@
                 document.getElementById('tourProgress').textContent = `${stepIndex + 1} of ${tourSteps.length}`;
                 tooltip.querySelector('.tour-btn.next').textContent = stepIndex === tourSteps.length - 1 ? 'Done' : 'Next';
                 tooltip.classList.add('visible');
-            }, 350);
+            }, 200);
         }
         
         function nextTourStep() {
@@ -1333,12 +1494,31 @@
             const oldHoursPerWeek = parseFloat(document.getElementById('oldHoursPerWeek').value) || 20;
             const oldTimePerPatient = parseFloat(document.getElementById('oldTimePerPatient').value) || 0.5;
             
+            // Base tier (Tier 1)
             const newPrice = parseFloat(document.getElementById('newPrice').value) || 0;
             const newClientsSteady = parseInt(document.getElementById('newClientsSteady').value) || 0;
             const startingPatients = parseInt(document.getElementById('startingPatients').value) || 0;
             const retention = (parseFloat(document.getElementById('retention').value) || 0) / 100;
             const hoursPerWeek = parseFloat(document.getElementById('hoursPerWeek').value) || 20;
             const newTimePerPatient = parseFloat(document.getElementById('newTimePerPatient').value) || 0.5;
+            
+            // Tier 2
+            const tier2Price = parseFloat(document.getElementById('tier2Price').value) || 0;
+            const tier2Clients = parseInt(document.getElementById('tier2Clients').value) || 0;
+            const tier2Retention = (parseFloat(document.getElementById('tier2Retention').value) || 0) / 100;
+            const tier2Time = parseFloat(document.getElementById('tier2Time').value) || 0;
+            
+            // Tier 3
+            const tier3Price = parseFloat(document.getElementById('tier3Price').value) || 0;
+            const tier3Clients = parseInt(document.getElementById('tier3Clients').value) || 0;
+            const tier3Retention = (parseFloat(document.getElementById('tier3Retention').value) || 0) / 100;
+            const tier3Time = parseFloat(document.getElementById('tier3Time').value) || 0;
+            
+            // Tier 4
+            const tier4Price = parseFloat(document.getElementById('tier4Price').value) || 0;
+            const tier4Clients = parseInt(document.getElementById('tier4Clients').value) || 0;
+            const tier4Retention = (parseFloat(document.getElementById('tier4Retention').value) || 0) / 100;
+            const tier4Time = parseFloat(document.getElementById('tier4Time').value) || 0;
             
             const oldMonthlyHoursAvailable = oldHoursPerWeek * 4.33;
             const newMonthlyHoursAvailable = hoursPerWeek * 4.33;
@@ -1355,14 +1535,25 @@
             
             const monthsToCalculate = selectedYear * 12;
             let activeClients = startingPatients;
+            let activeTier2 = 0;
+            let activeTier3 = 0;
+            let activeTier4 = 0;
             let allData = [];
             let cumulativeOld = 0, cumulativeNew = 0, breakevenMonth = null;
             
-            // Calculate subscription growth with proper compounding
+            // Calculate subscription growth with proper compounding for all tiers
             for (let month = 1; month <= monthsToCalculate; month++) {
-                // Apply retention to existing clients, then add new acquisitions
+                // Apply retention and add new acquisitions for each tier
                 activeClients = Math.round(activeClients * retention) + newClientsSteady;
-                const newMonthly = activeClients * newPrice;
+                activeTier2 = Math.round(activeTier2 * tier2Retention) + tier2Clients;
+                activeTier3 = Math.round(activeTier3 * tier3Retention) + tier3Clients;
+                activeTier4 = Math.round(activeTier4 * tier4Retention) + tier4Clients;
+                
+                const tier1Revenue = activeClients * newPrice;
+                const tier2Revenue = activeTier2 * tier2Price;
+                const tier3Revenue = activeTier3 * tier3Price;
+                const tier4Revenue = activeTier4 * tier4Price;
+                const newMonthly = tier1Revenue + tier2Revenue + tier3Revenue + tier4Revenue;
                 const monthlyDiff = newMonthly - oldMonthly;
                 
                 if (breakevenMonth === null && newMonthly >= oldMonthly) breakevenMonth = month;
@@ -1370,8 +1561,11 @@
                 cumulativeOld += oldMonthly;
                 cumulativeNew += newMonthly;
                 
-                const oldHoursRequired = (oldClients * oldMonthlyHoursPerPatient);
-                const newHoursRequired = (activeClients * newMonthlyHoursPerPatient);
+                const oldHoursRequired = oldClients * oldMonthlyHoursPerPatient;
+                const newHoursRequired = (activeClients * newMonthlyHoursPerPatient) + 
+                                        (activeTier2 * tier2Time) + 
+                                        (activeTier3 * tier3Time) + 
+                                        (activeTier4 * tier4Time);
                 
                 allData.push({ 
                     month, 
@@ -1379,7 +1573,7 @@
                     newRevenue: newMonthly, 
                     combinedRevenue: oldMonthly + newMonthly,
                     oldClients: oldClients,
-                    activeClients, 
+                    activeClients: activeClients + activeTier2 + activeTier3 + activeTier4, 
                     monthlyDiff, 
                     cumulativeDiff: cumulativeNew - cumulativeOld,
                     cumulativeOld, 
@@ -1396,19 +1590,19 @@
             const combinedTotal = oldTotal + newTotal;
             const finalMonth = displayData[displayData.length - 1];
             
+            // Calculate hourly rates
+            const oldHourlyRate = finalMonth.oldHoursRequired > 0 ? finalMonth.oldRevenue / finalMonth.oldHoursRequired : 0;
+            const newHourlyRate = finalMonth.newHoursRequired > 0 ? finalMonth.newRevenue / finalMonth.newHoursRequired : 0;
+            
             const oldUtilization = (finalMonth.oldHoursRequired / oldMonthlyHoursAvailable) * 100;
             const newUtilization = (finalMonth.newHoursRequired / newMonthlyHoursAvailable) * 100;
-            const totalUtilization = ((finalMonth.oldHoursRequired + finalMonth.newHoursRequired) / 
-                                      (oldMonthlyHoursAvailable + newMonthlyHoursAvailable)) * 100;
-            
-            const combinedPatients = finalMonth.oldClients + finalMonth.activeClients;
-            const oldUtilPercent = totalUtilization > 0 ? ((oldUtilization / totalUtilization) * 100).toFixed(0) : 0;
-            const newUtilPercent = totalUtilization > 0 ? ((newUtilization / totalUtilization) * 100).toFixed(0) : 0;
             
             // Update insights
             document.getElementById('breakevenMonth').textContent = breakevenMonth ? `Month ${breakevenMonth}` : 'N/A';
             document.getElementById('finalMRR').textContent = '$' + Math.round(finalMonth.newRevenue).toLocaleString();
             document.getElementById('patientLTV').textContent = '$' + Math.round(patientLTV).toLocaleString();
+            document.getElementById('oldHourlyRate').textContent = '$' + Math.round(oldHourlyRate) + '/hr';
+            document.getElementById('newHourlyRate').textContent = '$' + Math.round(newHourlyRate) + '/hr';
             
             const oldUtilEl = document.getElementById('oldUtilization');
             oldUtilEl.textContent = Math.round(oldUtilization) + '%';
@@ -1418,20 +1612,10 @@
             newUtilEl.textContent = Math.round(newUtilization) + '%';
             newUtilEl.className = 'insight-value ' + (newUtilization > 100 ? 'negative' : newUtilization > 80 ? '' : 'positive');
             
-            const totalUtilEl = document.getElementById('totalUtilization');
-            totalUtilEl.textContent = Math.round(totalUtilization) + '%';
-            totalUtilEl.className = 'insight-value ' + (totalUtilization > 100 ? 'negative' : totalUtilization > 80 ? '' : 'positive');
-            
             document.getElementById('oldTotal').textContent = '$' + oldTotal.toLocaleString();
             document.getElementById('newTotal').textContent = '$' + Math.round(newTotal).toLocaleString();
             document.getElementById('combinedTotalMetric').textContent = '$' + Math.round(combinedTotal).toLocaleString();
             document.getElementById('percentText').textContent = 'Total income';
-            
-            // Combined metrics
-            document.getElementById('combinedRevenue').textContent = '$' + Math.round(combinedTotal).toLocaleString();
-            document.getElementById('totalIncome').textContent = '$' + Math.round(combinedTotal).toLocaleString();
-            document.getElementById('combinedPatients').textContent = combinedPatients;
-            document.getElementById('utilizationRatio').textContent = oldUtilPercent + ':' + newUtilPercent;
             
             updateTable(displayData);
             updateCharts(displayData);

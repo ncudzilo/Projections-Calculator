@@ -140,55 +140,34 @@
             opacity: 1;
         }
         
-        /* Soft button/toggle aesthetic */
-        .controls-bar {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-        }
-        
-        .toggle-group {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .toggle-label {
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        
-        .toggle-switch {
+        /* Inline mini toggle */
+        .mini-toggle {
+            width: 80px;
+            height: 28px;
+            margin-left: 8px;
             position: relative;
-            width: 120px;
-            height: 36px;
             background: rgba(0, 0, 0, 0.5);
-            border-radius: 18px;
+            border-radius: 14px;
             border: 1px solid rgba(248, 204, 116, 0.15);
             cursor: pointer;
             transition: all 0.3s ease;
             box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
         }
         
-        .toggle-switch:hover {
+        .mini-toggle:hover {
             border-color: rgba(248, 204, 116, 0.25);
             box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 12px rgba(248, 204, 116, 0.1);
         }
         
-        .toggle-option {
+        .mini-toggle .toggle-option {
             position: absolute;
             top: 4px;
-            width: 56px;
-            height: 28px;
+            width: 36px;
+            height: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.65rem;
+            font-size: 0.6rem;
             font-weight: 600;
             color: var(--text-muted);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -196,29 +175,29 @@
             pointer-events: none;
         }
         
-        .toggle-option.left { left: 4px; }
-        .toggle-option.right { right: 4px; }
+        .mini-toggle .toggle-option.left { left: 4px; }
+        .mini-toggle .toggle-option.right { right: 4px; }
         
-        .toggle-slider {
+        .mini-toggle .toggle-slider {
             position: absolute;
             top: 4px;
             left: 4px;
-            width: 56px;
-            height: 28px;
+            width: 36px;
+            height: 20px;
             background: linear-gradient(135deg, rgba(248, 204, 116, 0.3) 0%, rgba(248, 204, 116, 0.2) 100%);
             border: 1px solid rgba(248, 204, 116, 0.4);
-            border-radius: 14px;
+            border-radius: 10px;
             box-shadow: 0 2px 8px rgba(248, 204, 116, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1;
         }
         
-        .toggle-switch.active .toggle-slider {
-            transform: translateX(56px);
+        .mini-toggle.active .toggle-slider {
+            transform: translateX(36px);
         }
         
-        .toggle-switch.active .toggle-option.right,
-        .toggle-switch:not(.active) .toggle-option.left {
+        .mini-toggle.active .toggle-option.right,
+        .mini-toggle:not(.active) .toggle-option.left {
             color: var(--brand);
             font-weight: 700;
         }
@@ -280,6 +259,8 @@
             font-weight: 500;
             color: var(--text-secondary);
             margin-bottom: 8px;
+            display: flex;
+            align-items: center;
         }
         
         .input-group input[type="number"] {
@@ -593,85 +574,121 @@
         
         .disclaimer-text strong { color: var(--text-secondary); font-weight: 500; }
         
-        /* PARTICLE LIQUID LIGHT ORB */
+        /* 3D PHOTON SPHERE ORB */
         .tour-orb {
             position: fixed;
             bottom: 32px;
             right: 32px;
-            width: 64px;
-            height: 64px;
+            width: 72px;
+            height: 72px;
             cursor: pointer;
             z-index: 10000;
             transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            perspective: 1000px;
+        }
+        
+        .tour-orb-sphere {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle at 30% 30%, 
+                rgba(255, 245, 215, 0.15) 0%,
+                rgba(248, 204, 116, 0.08) 25%,
+                rgba(248, 204, 116, 0.04) 50%,
+                rgba(10, 9, 8, 0.8) 75%,
+                rgba(0, 0, 0, 0.95) 100%
+            );
+            box-shadow: 
+                inset 0 -8px 20px rgba(0, 0, 0, 0.4),
+                inset 0 8px 20px rgba(255, 255, 255, 0.08),
+                0 4px 20px rgba(248, 204, 116, 0.3);
+            transform-style: preserve-3d;
+            animation: sphereRotate 20s linear infinite;
+        }
+        
+        @keyframes sphereRotate {
+            0% { transform: rotateY(0deg) rotateX(5deg); }
+            100% { transform: rotateY(360deg) rotateX(5deg); }
         }
         
         .tour-orb-particles {
             position: absolute;
             inset: 0;
             border-radius: 50%;
-            overflow: hidden;
-            animation: liquidMorph 8s ease-in-out infinite;
+            overflow: visible;
+            transform-style: preserve-3d;
         }
         
         .particle {
             position: absolute;
-            width: 3px;
-            height: 3px;
-            background: radial-gradient(circle, rgba(255, 245, 215, 0.9) 0%, rgba(248, 204, 116, 0.6) 50%, transparent 100%);
+            width: 1.5px;
+            height: 1.5px;
+            background: radial-gradient(circle, rgba(255, 250, 230, 1) 0%, rgba(248, 204, 116, 0.8) 40%, transparent 70%);
             border-radius: 50%;
-            filter: blur(0.5px);
-            animation: float 4s ease-in-out infinite;
+            filter: blur(0.3px);
+            box-shadow: 0 0 3px rgba(248, 204, 116, 0.6);
+            animation: photonFloat 3s ease-in-out infinite;
         }
         
-        @keyframes liquidMorph {
+        @keyframes photonFloat {
             0%, 100% { 
-                border-radius: 52% 48% 53% 47% / 48% 52% 48% 52%;
+                transform: translate(0, 0) scale(1);
+                opacity: 0.8;
             }
             25% { 
-                border-radius: 47% 53% 48% 52% / 52% 48% 53% 47%;
+                transform: translate(1px, -1px) scale(1.1);
+                opacity: 1;
             }
             50% { 
-                border-radius: 53% 47% 52% 48% / 47% 53% 47% 53%;
+                transform: translate(-0.5px, 0.5px) scale(0.9);
+                opacity: 0.7;
             }
             75% { 
-                border-radius: 48% 52% 47% 53% / 53% 47% 52% 48%;
+                transform: translate(-1px, -0.5px) scale(1.05);
+                opacity: 0.9;
             }
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translate(0, 0); }
-            25% { transform: translate(2px, -2px); }
-            50% { transform: translate(-1px, 1px); }
-            75% { transform: translate(-2px, -1px); }
         }
         
         .tour-orb-glow {
             position: absolute;
-            inset: -20px;
+            inset: -24px;
             background: radial-gradient(circle, 
-                rgba(248, 204, 116, 0.3) 0%, 
-                rgba(248, 204, 116, 0.15) 30%,
-                rgba(248, 204, 116, 0.05) 50%,
+                rgba(248, 204, 116, 0.25) 0%, 
+                rgba(248, 204, 116, 0.12) 30%,
+                rgba(248, 204, 116, 0.04) 50%,
                 transparent 70%
             );
             animation: glowPulse 3s ease-in-out infinite;
-            filter: blur(12px);
+            filter: blur(16px);
+            border-radius: 50%;
         }
         
         @keyframes glowPulse {
             0%, 100% { 
                 transform: scale(1);
-                opacity: 0.7;
+                opacity: 0.6;
             }
             50% { 
-                transform: scale(1.15);
-                opacity: 0.4;
+                transform: scale(1.12);
+                opacity: 0.35;
             }
+        }
+        
+        .tour-orb-highlight {
+            position: absolute;
+            top: 12%;
+            left: 25%;
+            width: 35%;
+            height: 35%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            border-radius: 50%;
+            filter: blur(8px);
+            opacity: 0.6;
         }
         
         .tour-orb-label {
             position: absolute;
-            right: 76px;
+            right: 84px;
             top: 50%;
             transform: translateY(-50%);
             background: rgba(10, 9, 8, 0.95);
@@ -693,16 +710,20 @@
             transform: translateY(-50%) translateX(-4px); 
         }
         
-        .tour-orb:hover .tour-orb-particles { 
-            animation-duration: 6s;
+        .tour-orb:hover .tour-orb-sphere { 
+            animation-duration: 15s;
+            box-shadow: 
+                inset 0 -8px 20px rgba(0, 0, 0, 0.4),
+                inset 0 8px 20px rgba(255, 255, 255, 0.12),
+                0 6px 30px rgba(248, 204, 116, 0.5);
         }
         
         .tour-orb.touring { 
-            width: 40px; 
-            height: 40px; 
+            width: 48px; 
+            height: 48px; 
         }
         
-        .tour-orb.touring .tour-orb-glow { inset: -12px; }
+        .tour-orb.touring .tour-orb-glow { inset: -16px; }
         .tour-orb.touring .tour-orb-label { display: none; }
         
         /* LIQUID GLASS TOOLTIP - Enhanced Translucency */
@@ -872,15 +893,13 @@
             .logo-container.scrolled { top: 10px; left: 10px; }
             .logo-img { height: 40px; }
             .logo-container.scrolled .logo-img { height: 28px; }
-            .controls-bar { gap: 16px; }
-            .toggle-group { flex-direction: column; gap: 6px; }
         }
         
         @media (max-width: 480px) {
             .inputs-grid { grid-template-columns: 1fr; }
             .insights-bar { grid-template-columns: 1fr; }
             .tour-tooltip { max-width: calc(100vw - 32px); left: 16px !important; right: 16px !important; }
-            .tour-orb { bottom: 20px; right: 20px; width: 52px; height: 52px; }
+            .tour-orb { bottom: 20px; right: 20px; width: 60px; height: 60px; }
             .year-selector { flex-direction: column; }
         }
     </style>
@@ -897,6 +916,9 @@
     
     <div class="tour-orb" id="tourOrb" onclick="startTour()">
         <div class="tour-orb-glow"></div>
+        <div class="tour-orb-sphere">
+            <div class="tour-orb-highlight"></div>
+        </div>
         <div class="tour-orb-particles" id="particles"></div>
         <div class="tour-orb-label">Take a Tour</div>
     </div>
@@ -905,7 +927,7 @@
         <div class="tour-tooltip-title" id="tooltipTitle">Welcome!</div>
         <div class="tour-tooltip-text" id="tooltipText">Let's take a quick tour.</div>
         <div class="tour-tooltip-footer">
-            <span class="tour-progress" id="tourProgress">1 of 6</span>
+            <span class="tour-progress" id="tourProgress">1 of 5</span>
             <div class="tour-buttons">
                 <button class="tour-btn skip" onclick="endTour()">Skip</button>
                 <button class="tour-btn next" onclick="nextTourStep()">Next</button>
@@ -919,29 +941,9 @@
             <p class="page-subtitle">Hybrid Revenue & Capacity Analysis</p>
         </div>
         
-        <!-- Toggle Controls -->
-        <div class="controls-bar glass-panel" style="padding: 16px 24px; margin-bottom: 24px;" id="tourStep1">
-            <div class="toggle-group">
-                <span class="toggle-label">View Period:</span>
-                <div class="toggle-switch" id="periodToggle" onclick="togglePeriod()">
-                    <div class="toggle-slider"></div>
-                    <div class="toggle-option left">Monthly</div>
-                    <div class="toggle-option right">Quarterly</div>
-                </div>
-            </div>
-            <div class="toggle-group">
-                <span class="toggle-label">Time Units:</span>
-                <div class="toggle-switch" id="unitsToggle" onclick="toggleUnits()">
-                    <div class="toggle-slider"></div>
-                    <div class="toggle-option left">Hours</div>
-                    <div class="toggle-option right">Minutes</div>
-                </div>
-            </div>
-        </div>
-        
         <!-- Input Sections -->
         <div class="input-sections">
-            <div class="input-panel glass-panel" id="tourStep2">
+            <div class="input-panel glass-panel" id="tourStep1">
                 <div class="panel-header">
                     <div class="panel-icon">
                         <svg viewBox="0 0 24 24">
@@ -958,22 +960,29 @@
                         <input type="number" id="oldPrice" value="750" step="50">
                     </div>
                     <div class="input-group">
-                        <label>Patients/<span id="oldClientsPeriod">Month</span>: <span id="oldClientsVal">2</span></label>
-                        <input type="range" id="oldClients" min="1" max="20" value="2" step="1">
+                        <label>Patients/Month: <span id="oldClientsVal">2</span></label>
+                        <input type="range" id="oldClients" min="1" max="50" value="2" step="1">
                     </div>
                     <div class="section-label">Provider Capacity</div>
                     <div class="input-group">
-                        <label><span id="oldTimeUnitLabel">Hours</span>/Week Available</label>
+                        <label>Hours/Week Available</label>
                         <input type="number" id="oldHoursPerWeek" value="20" step="1" min="1">
                     </div>
                     <div class="input-group">
-                        <label><span id="oldPatientTimeLabel">Mins</span>/Patient/<span id="oldPatientPeriod">Month</span></label>
-                        <input type="number" id="oldMinsPerPatient" value="30" step="5" min="5">
+                        <label>
+                            <span id="oldPatientTimeLabel">Hours</span>/Patient
+                            <div class="mini-toggle" id="oldTimeToggle" onclick="toggleOldTime()">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-option left">Mo</div>
+                                <div class="toggle-option right">Qtr</div>
+                            </div>
+                        </label>
+                        <input type="number" id="oldTimePerPatient" value="0.5" step="0.1" min="0.1">
                     </div>
                 </div>
             </div>
             
-            <div class="input-panel glass-panel" id="tourStep3">
+            <div class="input-panel glass-panel" id="tourStep2">
                 <div class="panel-header">
                     <div class="panel-icon">
                         <svg viewBox="0 0 24 24">
@@ -993,8 +1002,8 @@
                         <input type="range" id="retention" min="50" max="100" value="85" step="1">
                     </div>
                     <div class="input-group">
-                        <label>New Patients/<span id="newClientsPeriod">Month</span>: <span id="newClientsSteadyVal">8</span></label>
-                        <input type="range" id="newClientsSteady" min="1" max="30" value="8" step="1">
+                        <label>New Patients/Month: <span id="newClientsSteadyVal">8</span></label>
+                        <input type="range" id="newClientsSteady" min="1" max="100" value="8" step="1">
                     </div>
                     <div class="input-group">
                         <label>Starting Patients: <span id="startingPatientsVal">0</span></label>
@@ -1002,12 +1011,19 @@
                     </div>
                     <div class="section-label">Provider Capacity</div>
                     <div class="input-group">
-                        <label><span id="newTimeUnitLabel">Hours</span>/Week Available</label>
+                        <label>Hours/Week Available</label>
                         <input type="number" id="hoursPerWeek" value="20" step="1" min="1">
                     </div>
                     <div class="input-group">
-                        <label><span id="newPatientTimeLabel">Mins</span>/Patient/<span id="newPatientPeriod">Month</span></label>
-                        <input type="number" id="minsPerPatient" value="30" step="5" min="5">
+                        <label>
+                            <span id="newPatientTimeLabel">Hours</span>/Patient
+                            <div class="mini-toggle" id="newTimeToggle" onclick="toggleNewTime()">
+                                <div class="toggle-slider"></div>
+                                <div class="toggle-option left">Mo</div>
+                                <div class="toggle-option right">Qtr</div>
+                            </div>
+                        </label>
+                        <input type="number" id="newTimePerPatient" value="0.5" step="0.1" min="0.1">
                     </div>
                 </div>
             </div>
@@ -1015,7 +1031,7 @@
         
         <div class="results-section">
             <!-- Year Selector -->
-            <div class="year-selector glass-panel" style="padding: 16px 24px;" id="tourStep4">
+            <div class="year-selector glass-panel" style="padding: 16px 24px;" id="tourStep3">
                 <button class="year-btn active" data-year="1" onclick="selectYear(1)">Year 1</button>
                 <button class="year-btn" data-year="2" onclick="selectYear(2)">Year 2</button>
                 <button class="year-btn" data-year="3" onclick="selectYear(3)">Year 3</button>
@@ -1049,7 +1065,7 @@
             </div>
             
             <!-- Combined Section -->
-            <div class="combined-section glass-panel" id="tourStep5">
+            <div class="combined-section glass-panel" id="tourStep4">
                 <div class="combined-header">
                     <h3 class="combined-title">Hybrid Model Performance</h3>
                     <p class="combined-subtitle">Combining both revenue streams</p>
@@ -1090,9 +1106,9 @@
                     <div class="metric-subtext">Compound growth</div>
                 </div>
                 <div class="metric-card glass-panel highlight">
-                    <div class="metric-label">Difference</div>
-                    <div class="metric-value" id="difference">+$17,100</div>
-                    <div class="metric-subtext" id="percentGain">+95% increase</div>
+                    <div class="metric-label">Combined Total</div>
+                    <div class="metric-value" id="combinedTotalMetric">$53,100</div>
+                    <div class="metric-subtext" id="percentText">Total income</div>
                 </div>
             </div>
             
@@ -1113,19 +1129,19 @@
             </div>
             
             <div class="table-container glass-panel">
-                <h3>Period Breakdown</h3>
+                <h3>Monthly Breakdown</h3>
                 <table>
                     <thead>
                         <tr>
-                            <th>Period</th>
+                            <th>Month</th>
                             <th>Up-front</th>
                             <th>Old Pts</th>
                             <th>Subscription</th>
                             <th>New Pts</th>
                             <th>Combined</th>
                             <th>Δ vs Old</th>
-                            <th>Old <span id="oldTimeUnit">Hrs</span></th>
-                            <th>New <span id="newTimeUnit">Hrs</span></th>
+                            <th>Old Hrs</th>
+                            <th>New Hrs</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
@@ -1145,25 +1161,38 @@
     </div>
     
     <script>
-        // Create particle system
+        // Create 3D photon sphere particle system
         function createParticles() {
             const container = document.getElementById('particles');
-            const numParticles = 80;
+            const numParticles = 120;
             
             for (let i = 0; i < numParticles; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 
-                // Random position
-                const angle = (Math.PI * 2 * i) / numParticles;
-                const radius = 15 + Math.random() * 15;
-                const x = 50 + Math.cos(angle) * radius;
-                const y = 50 + Math.sin(angle) * radius;
+                // Fibonacci sphere distribution for even coverage
+                const phi = Math.acos(1 - 2 * (i + 0.5) / numParticles);
+                const theta = Math.PI * (1 + Math.sqrt(5)) * i;
+                
+                const radius = 42; // percentage from center
+                const x = 50 + radius * Math.sin(phi) * Math.cos(theta);
+                const y = 50 + radius * Math.sin(phi) * Math.sin(theta);
+                const z = Math.cos(phi);
+                
+                // Vary size based on z-depth for 3D effect
+                const depthScale = 0.6 + (z + 1) / 2 * 0.4;
+                const size = 1.5 * depthScale;
                 
                 particle.style.left = x + '%';
                 particle.style.top = y + '%';
-                particle.style.animationDelay = Math.random() * 4 + 's';
-                particle.style.animationDuration = (3 + Math.random() * 2) + 's';
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.opacity = 0.3 + depthScale * 0.5;
+                particle.style.animationDelay = Math.random() * 3 + 's';
+                particle.style.animationDuration = (2.5 + Math.random() * 1.5) + 's';
+                
+                // Add slight z-index variation for depth
+                particle.style.zIndex = Math.floor((z + 1) * 5);
                 
                 container.appendChild(particle);
             }
@@ -1172,8 +1201,8 @@
         createParticles();
         
         // State
-        let viewMode = 'monthly';
-        let timeUnits = 'hours';
+        let oldTimePeriod = 'monthly'; // monthly or quarterly
+        let newTimePeriod = 'monthly'; // monthly or quarterly
         let selectedYear = 1;
         
         // Logo shrink on scroll
@@ -1183,41 +1212,18 @@
         });
         
         // Toggle Functions
-        function togglePeriod() {
-            const toggle = document.getElementById('periodToggle');
+        function toggleOldTime() {
+            const toggle = document.getElementById('oldTimeToggle');
             toggle.classList.toggle('active');
-            viewMode = toggle.classList.contains('active') ? 'quarterly' : 'monthly';
-            updatePeriodLabels();
+            oldTimePeriod = toggle.classList.contains('active') ? 'quarterly' : 'monthly';
             calculate();
         }
         
-        function toggleUnits() {
-            const toggle = document.getElementById('unitsToggle');
+        function toggleNewTime() {
+            const toggle = document.getElementById('newTimeToggle');
             toggle.classList.toggle('active');
-            timeUnits = toggle.classList.contains('active') ? 'minutes' : 'hours';
-            updateTimeUnitLabels();
+            newTimePeriod = toggle.classList.contains('active') ? 'quarterly' : 'monthly';
             calculate();
-        }
-        
-        function updatePeriodLabels() {
-            const periodLabel = viewMode === 'monthly' ? 'Month' : 'Quarter';
-            document.getElementById('oldClientsPeriod').textContent = periodLabel;
-            document.getElementById('newClientsPeriod').textContent = periodLabel;
-            document.getElementById('oldPatientPeriod').textContent = periodLabel;
-            document.getElementById('newPatientPeriod').textContent = periodLabel;
-        }
-        
-        function updateTimeUnitLabels() {
-            const timeLabel = timeUnits === 'hours' ? 'Hours' : 'Minutes';
-            const shortLabel = timeUnits === 'hours' ? 'Hrs' : 'Mins';
-            const patientLabel = timeUnits === 'hours' ? 'Hours' : 'Mins';
-            
-            document.getElementById('oldTimeUnitLabel').textContent = timeLabel;
-            document.getElementById('newTimeUnitLabel').textContent = timeLabel;
-            document.getElementById('oldPatientTimeLabel').textContent = patientLabel;
-            document.getElementById('newPatientTimeLabel').textContent = patientLabel;
-            document.getElementById('oldTimeUnit').textContent = shortLabel;
-            document.getElementById('newTimeUnit').textContent = shortLabel;
         }
         
         function selectYear(year) {
@@ -1245,11 +1251,10 @@
         // Tour System
         const tourSteps = [
             { target: 'tourStep0', title: 'Welcome', text: 'Compare revenue and capacity in a hybrid model where providers offer both up-front programs and subscriptions.', position: 'bottom' },
-            { target: 'tourStep1', title: 'View Controls', text: 'Toggle between monthly/quarterly views and hours/minutes. These affect both display and input fields.', position: 'bottom' },
-            { target: 'tourStep2', title: 'Up-front Model', text: 'Configure one-time program pricing with capacity metrics. Labels update based on your toggle selections.', position: 'bottom' },
-            { target: 'tourStep3', title: 'Subscription Model', text: 'Set recurring pricing, retention, and acquisition rates with optional starting patient base.', position: 'top' },
-            { target: 'tourStep4', title: 'Multi-Year View', text: 'Switch between Year 1, 2, and 3 to see long-term growth patterns and capacity utilization.', position: 'bottom' },
-            { target: 'tourStep5', title: 'Hybrid Analysis', text: 'See combined metrics including total income, utilization ratios, and how both models work together.', position: 'top' }
+            { target: 'tourStep1', title: 'Up-front Model', text: 'Configure one-time program pricing with capacity metrics. Toggle hours/patient between monthly and quarterly. Patients/month slider goes up to 50.', position: 'bottom' },
+            { target: 'tourStep2', title: 'Subscription Model', text: 'Set monthly recurring pricing, retention rate (% who stay each month), new patient acquisition rate (up to 100/month), and optional starting patient base. Toggle hours/patient time period.', position: 'top' },
+            { target: 'tourStep3', title: 'Multi-Year View', text: 'Switch between Year 1, 2, and 3 to see long-term compound growth patterns and capacity utilization over time.', position: 'bottom' },
+            { target: 'tourStep4', title: 'Hybrid Analysis', text: 'View combined metrics showing total revenue from both models, patient counts, and utilization ratios demonstrating how the models work together.', position: 'top' }
         ];
         
         let currentTourStep = 0, tourActive = false;
@@ -1326,30 +1331,37 @@
             const oldPrice = parseFloat(document.getElementById('oldPrice').value) || 0;
             const oldClients = parseInt(document.getElementById('oldClients').value) || 0;
             const oldHoursPerWeek = parseFloat(document.getElementById('oldHoursPerWeek').value) || 20;
-            const oldMinsPerPatient = parseFloat(document.getElementById('oldMinsPerPatient').value) || 30;
+            const oldTimePerPatient = parseFloat(document.getElementById('oldTimePerPatient').value) || 0.5;
             
             const newPrice = parseFloat(document.getElementById('newPrice').value) || 0;
             const newClientsSteady = parseInt(document.getElementById('newClientsSteady').value) || 0;
             const startingPatients = parseInt(document.getElementById('startingPatients').value) || 0;
             const retention = (parseFloat(document.getElementById('retention').value) || 0) / 100;
             const hoursPerWeek = parseFloat(document.getElementById('hoursPerWeek').value) || 20;
-            const minsPerPatient = parseFloat(document.getElementById('minsPerPatient').value) || 30;
+            const newTimePerPatient = parseFloat(document.getElementById('newTimePerPatient').value) || 0.5;
             
-            const multiplier = viewMode === 'quarterly' ? 3 : 1;
             const oldMonthlyHoursAvailable = oldHoursPerWeek * 4.33;
             const newMonthlyHoursAvailable = hoursPerWeek * 4.33;
             
+            // Convert time per patient to monthly hours
+            const oldTimeMultiplier = oldTimePeriod === 'quarterly' ? 1/3 : 1;
+            const newTimeMultiplier = newTimePeriod === 'quarterly' ? 1/3 : 1;
+            const oldMonthlyHoursPerPatient = oldTimePerPatient * oldTimeMultiplier;
+            const newMonthlyHoursPerPatient = newTimePerPatient * newTimeMultiplier;
+            
             const avgMonths = retention < 1 ? 1 / (1 - retention) : 12;
             const patientLTV = newPrice * Math.min(avgMonths, 24);
-            const oldMonthly = oldPrice * oldClients * multiplier;
+            const oldMonthly = oldPrice * oldClients;
             
             const monthsToCalculate = selectedYear * 12;
             let activeClients = startingPatients;
             let allData = [];
             let cumulativeOld = 0, cumulativeNew = 0, breakevenMonth = null;
             
+            // Calculate subscription growth with proper compounding
             for (let month = 1; month <= monthsToCalculate; month++) {
-                activeClients = Math.round(activeClients * retention) + (newClientsSteady * multiplier);
+                // Apply retention to existing clients, then add new acquisitions
+                activeClients = Math.round(activeClients * retention) + newClientsSteady;
                 const newMonthly = activeClients * newPrice;
                 const monthlyDiff = newMonthly - oldMonthly;
                 
@@ -1358,15 +1370,15 @@
                 cumulativeOld += oldMonthly;
                 cumulativeNew += newMonthly;
                 
-                const oldHoursRequired = (oldClients * oldMinsPerPatient * multiplier) / 60;
-                const newHoursRequired = (activeClients * minsPerPatient) / 60;
+                const oldHoursRequired = (oldClients * oldMonthlyHoursPerPatient);
+                const newHoursRequired = (activeClients * newMonthlyHoursPerPatient);
                 
                 allData.push({ 
                     month, 
                     oldRevenue: oldMonthly, 
                     newRevenue: newMonthly, 
                     combinedRevenue: oldMonthly + newMonthly,
-                    oldClients: oldClients * multiplier,
+                    oldClients: oldClients,
                     activeClients, 
                     monthlyDiff, 
                     cumulativeDiff: cumulativeNew - cumulativeOld,
@@ -1382,14 +1394,12 @@
             const oldTotal = oldMonthly * 12;
             const newTotal = displayData.reduce((sum, d) => sum + d.newRevenue, 0);
             const combinedTotal = oldTotal + newTotal;
-            const totalDiff = newTotal - oldTotal;
-            const percentGain = oldTotal > 0 ? ((totalDiff / oldTotal) * 100).toFixed(0) : 0;
             const finalMonth = displayData[displayData.length - 1];
             
-            const oldUtilization = (finalMonth.oldHoursRequired / (oldMonthlyHoursAvailable * multiplier)) * 100;
-            const newUtilization = (finalMonth.newHoursRequired / (newMonthlyHoursAvailable * multiplier)) * 100;
+            const oldUtilization = (finalMonth.oldHoursRequired / oldMonthlyHoursAvailable) * 100;
+            const newUtilization = (finalMonth.newHoursRequired / newMonthlyHoursAvailable) * 100;
             const totalUtilization = ((finalMonth.oldHoursRequired + finalMonth.newHoursRequired) / 
-                                      ((oldMonthlyHoursAvailable + newMonthlyHoursAvailable) * multiplier)) * 100;
+                                      (oldMonthlyHoursAvailable + newMonthlyHoursAvailable)) * 100;
             
             const combinedPatients = finalMonth.oldClients + finalMonth.activeClients;
             const oldUtilPercent = totalUtilization > 0 ? ((oldUtilization / totalUtilization) * 100).toFixed(0) : 0;
@@ -1414,8 +1424,8 @@
             
             document.getElementById('oldTotal').textContent = '$' + oldTotal.toLocaleString();
             document.getElementById('newTotal').textContent = '$' + Math.round(newTotal).toLocaleString();
-            document.getElementById('difference').textContent = (totalDiff >= 0 ? '+$' : '-$') + Math.abs(Math.round(totalDiff)).toLocaleString();
-            document.getElementById('percentGain').textContent = (totalDiff >= 0 ? '+' : '') + percentGain + '% vs old';
+            document.getElementById('combinedTotalMetric').textContent = '$' + Math.round(combinedTotal).toLocaleString();
+            document.getElementById('percentText').textContent = 'Total income';
             
             // Combined metrics
             document.getElementById('combinedRevenue').textContent = '$' + Math.round(combinedTotal).toLocaleString();
@@ -1431,23 +1441,21 @@
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
             
-            const displayData = viewMode === 'quarterly' ? aggregateQuarterly(data) : data;
             let firstBreakeven = true;
             
-            displayData.forEach((row, i) => {
+            data.forEach((row, i) => {
                 const tr = document.createElement('tr');
-                if (row.monthlyDiff >= 0 && (i === 0 || displayData[i-1].monthlyDiff < 0) && firstBreakeven) { 
+                if (row.monthlyDiff >= 0 && (i === 0 || data[i-1].monthlyDiff < 0) && firstBreakeven) { 
                     tr.className = 'breakeven-row'; 
                     firstBreakeven = false; 
                 }
                 
-                const oldTime = timeUnits === 'hours' ? row.oldHoursRequired.toFixed(1) : (row.oldHoursRequired * 60).toFixed(0);
-                const newTime = timeUnits === 'hours' ? row.newHoursRequired.toFixed(1) : (row.newHoursRequired * 60).toFixed(0);
-                const periodLabel = viewMode === 'quarterly' ? 'Q' : 'Mo';
-                const periodNum = viewMode === 'quarterly' ? row.month : ((selectedYear - 1) * 12 + row.month);
+                const oldTime = row.oldHoursRequired.toFixed(1);
+                const newTime = row.newHoursRequired.toFixed(1);
+                const monthNum = (selectedYear - 1) * 12 + row.month;
                 
                 tr.innerHTML = `
-                    <td><strong>${periodLabel} ${viewMode === 'quarterly' ? row.month : periodNum}</strong></td>
+                    <td><strong>Mo ${monthNum}</strong></td>
                     <td>$${Math.round(row.oldRevenue).toLocaleString()}</td>
                     <td>${row.oldClients}</td>
                     <td>$${Math.round(row.newRevenue).toLocaleString()}</td>
@@ -1459,35 +1467,6 @@
                 `;
                 tbody.appendChild(tr);
             });
-        }
-        
-        function aggregateQuarterly(monthlyData) {
-            const quarterly = [];
-            for (let q = 0; q < 4; q++) {
-                const startIdx = q * 3;
-                const endIdx = Math.min(startIdx + 3, monthlyData.length);
-                const quarterMonths = monthlyData.slice(startIdx, endIdx);
-                
-                if (quarterMonths.length === 0) continue;
-                
-                const qData = {
-                    month: q + 1,
-                    oldRevenue: quarterMonths.reduce((sum, m) => sum + m.oldRevenue, 0),
-                    newRevenue: quarterMonths.reduce((sum, m) => sum + m.newRevenue, 0),
-                    combinedRevenue: quarterMonths.reduce((sum, m) => sum + m.combinedRevenue, 0),
-                    oldClients: quarterMonths[quarterMonths.length - 1].oldClients,
-                    activeClients: quarterMonths[quarterMonths.length - 1].activeClients,
-                    oldHoursRequired: quarterMonths.reduce((sum, m) => sum + m.oldHoursRequired, 0),
-                    newHoursRequired: quarterMonths.reduce((sum, m) => sum + m.newHoursRequired, 0),
-                    cumulativeOld: quarterMonths[quarterMonths.length - 1].cumulativeOld,
-                    cumulativeNew: quarterMonths[quarterMonths.length - 1].cumulativeNew,
-                    cumulativeCombined: quarterMonths[quarterMonths.length - 1].cumulativeCombined
-                };
-                qData.monthlyDiff = qData.newRevenue - qData.oldRevenue;
-                qData.cumulativeDiff = qData.cumulativeNew - qData.cumulativeOld;
-                quarterly.push(qData);
-            }
-            return quarterly;
         }
         
         function updateCharts(data) {

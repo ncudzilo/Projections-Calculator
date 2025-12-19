@@ -3,796 +3,485 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reneu Projections Calculator</title>
+    <title>Reneu Projections</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-base: #050505;
+            --bg: #080808;
+            --glass: rgba(20, 20, 20, 0.5);
+            --glass-border: rgba(248, 204, 116, 0.12);
             --brand: #f8cc74;
-            --brand-glow: rgba(248, 204, 116, 0.15);
-            --brand-border: rgba(248, 204, 116, 0.15);
-            --text-primary: #f2f2f2;
-            --text-secondary: rgba(255, 255, 255, 0.65);
-            --text-muted: rgba(255, 255, 255, 0.4);
-            --positive: #6ee7b7;
-            --negative: #fca5a5;
-            --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.05);
+            --brand-muted: rgba(248, 204, 116, 0.6);
+            --text: #e5e5e5;
+            --text-dim: rgba(255, 255, 255, 0.4);
         }
-        
+
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
         body {
             font-family: 'Inter', sans-serif;
-            background-color: var(--bg-base);
+            background-color: var(--bg);
+            color: var(--text);
             min-height: 100vh;
-            color: var(--text-primary);
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
-        /* 3D EMBOSSED BACKGROUND */
-        .triquetra-bg {
+        /* --- 3D EMBOSSED BACKGROUND --- */
+        .bg-container {
             position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 85vw;
-            height: 85vw;
-            max-width: 900px;
-            max-height: 900px;
+            inset: 0;
             z-index: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             pointer-events: none;
-            opacity: 0.4; /* Higher opacity because the filter darkens it */
-            mix-blend-mode: soft-light;
+        }
+        .embossed-triquetra {
+            width: 80vw;
+            max-width: 800px;
+            filter: drop-shadow(0px 1px 1px rgba(255,255,255,0.05)) drop-shadow(-1px -1px 1px rgba(0,0,0,0.8));
+            opacity: 0.15;
         }
 
-        /* LOGO ANIMATION */
-        .logo-container {
+        /* --- LOGO ANIMATION --- */
+        .header-nav {
             position: fixed;
-            top: 30px;
-            left: 30px;
+            top: 0; width: 100%;
+            padding: 40px;
             z-index: 100;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            transform-origin: top left;
+            display: flex;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
         .logo-img {
-            height: 70px; /* Start Larger */
-            width: auto;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5));
+            height: 72px;
+            transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        
-        .logo-container.scrolled {
-            top: 15px;
-            left: 15px;
-        }
-
-        .logo-container.scrolled .logo-img {
-            height: 40px; /* Shrink on scroll */
-        }
+        .scrolled.header-nav { padding: 20px; background: rgba(8,8,8,0.8); backdrop-filter: blur(10px); }
+        .scrolled .logo-img { height: 40px; }
 
         .container {
-            max-width: 1100px;
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 120px 20px 100px 20px;
-            position: relative;
-            z-index: 2;
+            padding: 180px 24px 100px;
         }
 
-        /* HEADER */
-        .page-header { text-align: center; margin-bottom: 40px; }
         .page-title {
-            font-size: 2.2rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #fff 0%, #ccc 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-        .page-subtitle {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.25em;
-            color: var(--brand);
-            opacity: 0.8;
+            font-weight: 300;
+            font-size: 2.5rem;
+            letter-spacing: -0.02em;
+            text-align: center;
+            margin-bottom: 60px;
+            color: #fff;
         }
 
-        /* GLASS PANELS */
-        .glass-panel {
-            background: rgba(15, 14, 13, 0.65);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid var(--brand-border);
-            border-radius: 20px;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            transition: transform 0.3s ease, border-color 0.3s ease;
-        }
-
-        .glass-panel:hover {
-            border-color: rgba(248, 204, 116, 0.3);
-            transform: translateY(-2px);
-        }
-
-        /* VIEW PERIOD TOGGLE */
-        .controls-bar {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 30px;
-        }
-
-        .view-toggle {
-            display: flex;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid var(--brand-border);
-            border-radius: 30px;
-            padding: 4px;
-        }
-
-        .view-btn {
-            padding: 8px 24px;
+        /* --- LIQUID GLASS PANELS --- */
+        .glass-card {
+            background: var(--glass);
+            backdrop-filter: blur(25px) saturate(150%);
+            -webkit-backdrop-filter: blur(25px) saturate(150%);
+            border: 1px solid var(--glass-border);
             border-radius: 24px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-muted);
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.05);
+            margin-bottom: 24px;
+            overflow: hidden;
         }
 
-        .view-btn.active {
-            background: var(--brand-glow);
-            color: var(--brand);
-            box-shadow: 0 0 10px rgba(248, 204, 116, 0.1);
-        }
-
-        /* INPUT SECTIONS */
-        .input-sections {
+        .panel-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 24px;
+            margin-bottom: 40px;
+        }
+
+        .input-panel { padding: 40px; }
+        .panel-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2em;
+            color: var(--brand);
             margin-bottom: 30px;
-        }
-
-        .input-panel { padding: 32px; }
-
-        .panel-header {
             display: flex;
             align-items: center;
-            gap: 16px;
-            margin-bottom: 28px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.05);
+            gap: 10px;
         }
 
-        .panel-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, rgba(248,204,116,0.2), rgba(248,204,116,0.05));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
+        /* --- INPUTS & TOGGLES --- */
+        .group { margin-bottom: 24px; }
+        .label-wrap { display: flex; justify-content: space-between; margin-bottom: 12px; }
+        .label-wrap label { font-size: 0.8rem; color: var(--text-dim); display: flex; align-items: center; gap: 6px; }
         
-        .panel-icon svg { width: 20px; height: 20px; stroke: var(--brand); stroke-width: 2; fill: none; }
-        .panel-title { font-size: 1.1rem; font-weight: 600; color: #fff; }
-
-        .inputs-grid { display: flex; flex-direction: column; gap: 20px; }
-        .input-group { display: flex; flex-direction: column; }
-        .label-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .input-group label { font-size: 0.75rem; font-weight: 500; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; }
-        .val-display { color: var(--brand); font-weight: 600; font-size: 0.75rem; }
-
-        /* IN-LINE UNIT TOGGLES */
-        .mini-toggle {
-            display: flex;
-            background: rgba(0,0,0,0.5);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 4px;
-            padding: 2px;
-            margin-left: 8px;
-        }
-
-        .mini-btn {
-            font-size: 0.55rem;
-            padding: 2px 6px;
-            border-radius: 2px;
-            color: var(--text-muted);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.2s;
-        }
-
-        .mini-btn.active { background: var(--brand); color: #000; }
-
-        /* INPUTS */
         input[type="number"] {
             width: 100%;
-            padding: 12px;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 14px;
             color: #fff;
             font-family: inherit;
-            font-size: 0.95rem;
-            transition: border-color 0.2s;
+            outline: none;
+            transition: border 0.3s;
         }
+        input[type="number"]:focus { border-color: var(--brand-muted); }
 
-        input[type="number"]:focus { outline: none; border-color: var(--brand); background: rgba(0,0,0,0.5); }
-        input[type="range"] { width: 100%; height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; appearance: none; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { appearance: none; width: 16px; height: 16px; border-radius: 50%; background: var(--brand); cursor: pointer; box-shadow: 0 0 10px rgba(248, 204, 116, 0.4); transition: transform 0.2s; }
-        input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
-
-        .section-separator {
-            font-size: 0.65rem;
-            text-transform: uppercase;
-            letter-spacing: 0.1em;
-            color: var(--brand);
-            opacity: 0.6;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px dashed rgba(255,255,255,0.1);
-        }
-
-        /* ACCORDION (Enterprise) */
-        .accordion { margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
-        .accordion-header {
-            width: 100%;
-            padding: 16px 0;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-align: left;
-            cursor: pointer;
+        .unit-toggle {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: rgba(0,0,0,0.3);
+            border-radius: 6px;
+            padding: 2px;
         }
-        .accordion-header:hover { color: var(--brand); }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s ease-out;
-            padding-left: 10px;
-            border-left: 2px solid rgba(248, 204, 116, 0.2);
+        .unit-btn {
+            font-size: 0.6rem;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: none; border: none;
+            color: var(--text-dim);
+            cursor: pointer;
+            font-weight: 600;
         }
-        .accordion-content.open { max-height: 800px; padding-bottom: 16px; }
-        .tier-block { margin-bottom: 20px; }
-        .tier-title { color: var(--brand); font-size: 0.75rem; margin-bottom: 10px; font-weight: 600; text-transform: uppercase; }
+        .unit-btn.active { background: var(--brand); color: #000; }
 
-        /* RESULTS */
-        .results-section { display: flex; flex-direction: column; gap: 24px; }
-        .insights-bar { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; }
-        .insight-item { background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 16px 8px; text-align: center; }
-        .insight-label { font-size: 0.6rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 6px; }
-        .insight-value { font-size: 1.1rem; font-weight: 700; color: var(--brand); text-shadow: 0 0 15px rgba(248,204,116,0.2); }
-        .insight-value.good { color: var(--positive); text-shadow: 0 0 15px rgba(110, 231, 183, 0.2); }
-        .insight-value.bad { color: var(--negative); }
+        /* --- ACCORDIONS --- */
+        .tier-accordion {
+            border-top: 1px solid rgba(255,255,255,0.05);
+            margin-top: 16px;
+        }
+        .tier-trigger {
+            width: 100%; padding: 16px 0;
+            background: none; border: none;
+            display: flex; justify-content: space-between;
+            color: var(--text); font-size: 0.8rem; cursor: pointer;
+        }
+        .tier-content {
+            max-height: 0; overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .tier-content.open { max-height: 200px; padding-bottom: 20px; }
 
-        .combined-card { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; padding: 24px; }
-        .stat-box { text-align: center; padding: 16px; background: rgba(0,0,0,0.2); border-radius: 12px; border: 1px solid rgba(255,255,255,0.03); }
-        .stat-label { font-size: 0.6rem; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.05em; margin-bottom: 8px; }
-        .stat-val { font-size: 1.4rem; font-weight: 700; color: #fff; }
-        .stat-sub { font-size: 0.65rem; color: var(--text-secondary); margin-top: 4px; }
+        /* --- METRICS --- */
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .metric-mini {
+            padding: 20px 10px;
+            text-align: center;
+        }
+        .m-label { font-size: 0.55rem; text-transform: uppercase; color: var(--text-dim); margin-bottom: 8px; letter-spacing: 0.1em; }
+        .m-value { font-size: 1.1rem; font-weight: 400; color: var(--brand); }
 
-        .metrics-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-        .metric-card { padding: 30px; text-align: center; }
-        .metric-card.highlight { background: linear-gradient(135deg, rgba(248, 204, 116, 0.08), rgba(248, 204, 116, 0.02)); border-color: rgba(248, 204, 116, 0.3); }
-        .big-val { font-size: 2rem; font-weight: 700; margin: 10px 0; }
-        .highlight .big-val { color: var(--brand); text-shadow: 0 0 20px rgba(248, 204, 116, 0.4); }
+        /* --- HELP TOOLTIPS --- */
+        .help-icon {
+            width: 14px; height: 14px;
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: inline-flex; align-items: center; justify-content: center;
+            font-size: 8px; color: var(--text-dim); cursor: help;
+        }
+        .help-icon:hover { border-color: var(--brand); color: var(--brand); }
 
-        .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .chart-box { padding: 24px; }
-        .chart-title { font-size: 0.9rem; font-weight: 600; margin-bottom: 16px; color: var(--text-secondary); }
+        /* --- CHART STYLING --- */
+        .chart-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 24px; }
+        .chart-wrap { padding: 30px; }
 
-        .table-box { padding: 24px; overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; }
-        th { text-align: left; color: var(--text-muted); font-weight: 600; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        td { padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.03); color: var(--text-secondary); }
-        tr:hover td { background: rgba(255,255,255,0.02); }
-        .breakeven-row td { background: rgba(248, 204, 116, 0.1); color: var(--brand); font-weight: 600; }
-
-        .year-selector { display: flex; justify-content: center; gap: 12px; margin-bottom: 24px; }
-        .year-btn { background: rgba(0,0,0,0.5); border: 1px solid rgba(255,255,255,0.1); color: var(--text-secondary); padding: 8px 20px; border-radius: 8px; cursor: pointer; transition: all 0.2s; }
-        .year-btn.active { background: var(--brand-glow); border-color: var(--brand); color: var(--brand); }
-
-        .disclaimer { padding: 20px; margin-top: 20px; font-size: 0.7rem; color: var(--text-muted); line-height: 1.6; }
-
-        /* TOUR & ORB */
-        #orbCanvas { position: fixed; bottom: 20px; right: 20px; width: 140px; height: 140px; z-index: 999; cursor: pointer; transition: transform 0.3s ease; }
-        #orbCanvas:hover { transform: scale(1.05); }
-        .orb-label { position: fixed; bottom: 75px; right: 150px; background: rgba(0,0,0,0.8); border: 1px solid var(--brand-border); padding: 8px 12px; border-radius: 8px; font-size: 0.75rem; color: var(--brand); opacity: 0; transform: translateX(10px); transition: all 0.3s ease; pointer-events: none; z-index: 998; }
-        #orbCanvas:hover + .orb-label { opacity: 1; transform: translateX(0); }
-
-        .tour-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-        .tour-overlay.active { opacity: 1; pointer-events: auto; }
-        .tour-tooltip { position: fixed; width: 300px; background: rgba(20,20,20,0.95); border: 1px solid var(--brand); border-radius: 12px; padding: 20px; z-index: 1001; opacity: 0; transition: all 0.3s; pointer-events: none; box-shadow: 0 0 50px rgba(0,0,0,0.8); }
-        .tour-tooltip.active { opacity: 1; pointer-events: auto; }
-        .tour-tooltip h3 { color: var(--brand); margin-bottom: 8px; font-size: 1rem; }
-        .tour-tooltip p { font-size: 0.85rem; color: #ddd; line-height: 1.5; margin-bottom: 16px; }
-        .tour-btn { padding: 6px 16px; border-radius: 6px; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer; }
-        .tour-btn.next { background: var(--brand); color: #000; float: right; }
-        .tour-btn.skip { background: transparent; color: #888; }
-        .highlight-tour { box-shadow: 0 0 0 4px var(--brand), 0 0 50px rgba(0,0,0,0.8) !important; z-index: 1001 !important; position: relative; }
+        /* --- ORB --- */
+        #orbCanvas { position: fixed; bottom: 30px; right: 30px; z-index: 1000; cursor: pointer; filter: drop-shadow(0 0 20px rgba(248,204,116,0.3)); }
 
         @media (max-width: 900px) {
-            .input-sections, .charts-row, .combined-card, .metrics-grid { grid-template-columns: 1fr; }
-            .insights-bar { grid-template-columns: repeat(3, 1fr); }
-            .container { padding-top: 100px; }
+            .panel-grid, .metrics-row, .chart-grid { grid-template-columns: 1fr; }
+            .metrics-row { grid-template-columns: 1fr 1fr; }
         }
     </style>
 </head>
 <body>
 
-    <svg class="triquetra-bg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-            <filter id="emboss" x="-20%" y="-20%" width="140%" height="140%">
-                <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
-                <feSpecularLighting in="blur" surfaceScale="5" specularConstant="1" specularExponent="20" lighting-color="#ffffff" result="specOut">
-                    <fePointLight x="-5000" y="-10000" z="20000"/>
-                </feSpecularLighting>
-                <feComposite in="specOut" in2="SourceAlpha" operator="in" result="specOut"/>
-                <feComposite in="SourceGraphic" in2="specOut" operator="arithmetic" k1="0" k2="1" k3="1" k4="0" result="litPaint"/>
-            </filter>
-        </defs>
-        <path d="M100 20 C 130 20, 160 60, 160 90 C 160 130, 130 170, 100 170 C 70 170, 40 130, 40 90 C 40 60, 70 20, 100 20 Z M100 170 C 130 170, 170 140, 170 100 C 170 60, 130 30, 100 30 C 70 30, 30 60, 30 100 C 30 140, 70 170, 100 170 Z M100 30 C 140 30, 170 70, 170 110 C 170 140, 140 180, 100 180 C 60 180, 30 140, 30 110 C 30 70, 60 30, 100 30 Z" 
-              fill="#111" stroke="#000" stroke-width="1" filter="url(#emboss)" transform="rotate(180, 100, 100)" />
-    </svg>
-
-    <div class="logo-container" id="logoContainer">
-        <img src="https://images.squarespace-cdn.com/content/67b235ef2dea730361197833/c8e81194-4662-4ff0-806d-e8ba9e2be295/Gold+Logo+2.png?content-type=image%2Fpng" alt="Reneu" class="logo-img">
+    <div class="bg-container">
+        <svg class="embossed-triquetra" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <filter id="liquid-emboss">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2" result="blur"/>
+                    <feSpecularLighting in="blur" surfaceScale="4" specularConstant="0.8" specularExponent="25" lighting-color="#f8cc74" result="spec">
+                        <fePointLight x="-50" y="-100" z="200"/>
+                    </feSpecularLighting>
+                    <feComposite in="spec" in2="SourceAlpha" operator="in" result="spec"/>
+                    <feComposite in="SourceGraphic" in2="spec" operator="arithmetic" k1="0" k2="1" k3="1" k4="0"/>
+                </filter>
+            </defs>
+            <path d="M100 20 C 130 20, 160 60, 160 90 C 160 130, 130 170, 100 170 C 70 170, 40 130, 40 90 C 40 60, 70 20, 100 20 Z M100 170 C 130 170, 170 140, 170 100 C 170 60, 130 30, 100 30 C 70 30, 30 60, 30 100 C 30 140, 70 170, 100 170 Z M100 30 C 140 30, 170 70, 170 110 C 170 140, 140 180, 100 180 C 60 180, 30 140, 30 110 C 30 70, 60 30, 100 30 Z" 
+            fill="#0a0a0a" filter="url(#liquid-emboss)" transform="rotate(180 100 100)"/>
+        </svg>
     </div>
 
-    <canvas id="orbCanvas" width="280" height="280"></canvas>
-    <div class="orb-label">Start Tour</div>
-    
-    <div class="tour-overlay" id="tourOverlay"></div>
-    <div class="tour-tooltip" id="tourTooltip">
-        <h3 id="tourTitle">Title</h3>
-        <p id="tourText">Text</p>
-        <button class="tour-btn skip" onclick="endTour()">Skip</button>
-        <button class="tour-btn next" onclick="nextStep()">Next</button>
+    <div class="header-nav" id="nav">
+        <img src="https://images.squarespace-cdn.com/content/67b235ef2dea730361197833/c8e81194-4662-4ff0-806d-e8ba9e2be295/Gold+Logo+2.png" class="logo-img">
     </div>
+
+    <canvas id="orbCanvas" width="160" height="160"></canvas>
 
     <div class="container">
-        <div class="page-header" id="tour-intro">
-            <h1 class="page-title">Projections Calculator</h1>
-            <p class="page-subtitle">Hybrid Revenue & Capacity Analysis</p>
-        </div>
+        <h1 class="page-title">Projections Analysis</h1>
 
-        <div class="controls-bar">
-            <div class="glass-panel view-toggle" id="tour-period">
-                <button class="view-btn active" onclick="setPeriod('monthly')" id="btnMonthly">Monthly</button>
-                <button class="view-btn" onclick="setPeriod('quarterly')" id="btnQuarterly">Quarterly</button>
+        <div class="metrics-row">
+            <div class="glass-card metric-mini">
+                <div class="m-label">Break-Even <span class="help-icon" title="When subscription revenue exceeds up-front revenue per period.">?</span></div>
+                <div class="m-value" id="m-be">-</div>
+            </div>
+            <div class="glass-card metric-mini">
+                <div class="m-label">Final MRR <span class="help-icon" title="Monthly Recurring Revenue at end of year.">?</span></div>
+                <div class="m-value" id="m-mrr">$0</div>
+            </div>
+            <div class="glass-card metric-mini">
+                <div class="m-label">Patient LTV <span class="help-icon" title="Average revenue expected from one patient over their lifetime.">?</span></div>
+                <div class="m-value" id="m-ltv">$0</div>
+            </div>
+            <div class="glass-card metric-mini">
+                <div class="m-label">Up-front Util.</div>
+                <div class="m-value" id="m-u-util">0%</div>
+            </div>
+            <div class="glass-card metric-mini">
+                <div class="m-label">Sub. Util.</div>
+                <div class="m-value" id="m-s-util">0%</div>
+            </div>
+            <div class="glass-card metric-mini">
+                <div class="m-label">Total Util.</div>
+                <div class="m-value" id="m-total">0%</div>
             </div>
         </div>
 
-        <div class="input-sections">
-            <div class="glass-panel input-panel" id="tour-upfront">
-                <div class="panel-header">
-                    <div class="panel-icon"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg></div>
-                    <h2 class="panel-title">Up-front Cost Model</h2>
+        <div class="panel-grid">
+            <div class="glass-card input-panel">
+                <div class="panel-label">Up-front Program</div>
+                <div class="group">
+                    <div class="label-wrap"><label>Program Price ($)</label></div>
+                    <input type="number" id="u-price" value="750">
                 </div>
-                <div class="inputs-grid">
-                    <div class="input-group">
-                        <label>Program Price ($)</label>
-                        <input type="number" id="oldPrice" value="750" step="50">
+                <div class="group">
+                    <div class="label-wrap"><label>Patients per Mo</label><span class="val-display" id="u-vol-v">2</span></div>
+                    <input type="range" id="u-vol" min="0" max="20" value="2">
+                </div>
+                <div class="section-separator" style="margin: 30px 0 20px; border-top: 1px solid rgba(255,255,255,0.05);"></div>
+                <div class="group">
+                    <div class="label-wrap">
+                        <label>Weekly Availability</label>
+                        <div class="unit-toggle"><button class="unit-btn active" onclick="uT(this,'u-cap','hr')">Hr</button><button class="unit-btn" onclick="uT(this,'u-cap','min')">Min</button></div>
                     </div>
-                    <div class="input-group">
-                        <label>Patients/<span class="period-label">Month</span> <span class="val-display" id="oldClientsVal">2</span></label>
-                        <input type="range" id="oldClients" min="0" max="20" value="2">
+                    <input type="number" id="u-cap" value="20">
+                </div>
+                <div class="group">
+                    <div class="label-wrap">
+                        <label>Time per Patient</label>
+                        <div class="unit-toggle"><button class="unit-btn" onclick="uT(this,'u-dur','hr')">Hr</button><button class="unit-btn active" onclick="uT(this,'u-dur','min')">Min</button></div>
                     </div>
-                    <div class="section-separator">Provider Capacity</div>
-                    <div class="input-group">
-                        <label>Availability
-                            <div class="mini-toggle">
-                                <button class="mini-btn active" onclick="setUnit('oldCap', 'hrs', this)">Hr</button>
-                                <button class="mini-btn" onclick="setUnit('oldCap', 'min', this)">Min</button>
-                            </div>
-                        </label>
-                        <input type="number" id="oldCapacity" value="20">
-                    </div>
-                    <div class="input-group">
-                        <label>Time per Patient
-                            <div class="mini-toggle">
-                                <button class="mini-btn" onclick="setUnit('oldDur', 'hrs', this)">Hr</button>
-                                <button class="mini-btn active" onclick="setUnit('oldDur', 'min', this)">Min</button>
-                            </div>
-                        </label>
-                        <input type="number" id="oldDuration" value="30">
-                    </div>
+                    <input type="number" id="u-dur" value="30">
                 </div>
             </div>
 
-            <div class="glass-panel input-panel" id="tour-sub">
-                <div class="panel-header">
-                    <div class="panel-icon"><svg viewBox="0 0 24 24"><path d="M21 12a9 9 0 1 1-9-9c2.52 0 4.93 1 6.74 2.74L21 8"/></svg></div>
-                    <h2 class="panel-title">Subscription Model</h2>
+            <div class="glass-card input-panel">
+                <div class="panel-label">Subscription Model</div>
+                <div class="group">
+                    <div class="label-wrap"><label>Tier 1 Price ($)</label></div>
+                    <input type="number" id="s-price" value="90">
                 </div>
-                <div class="inputs-grid">
-                    <div class="input-group">
-                        <label>Tier 1 Price ($)</label>
-                        <input type="number" id="newPrice" value="90">
-                    </div>
-                    <div class="input-group">
-                        <label>Retention Rate <span class="val-display" id="retentionVal">85%</span></label>
-                        <input type="range" id="retention" min="50" max="100" value="85">
-                    </div>
-                    <div class="input-group">
-                        <label>Tier 1 Patients/<span class="period-label">Month</span> <span class="val-display" id="newClientsVal">8</span></label>
-                        <input type="range" id="newClients" min="1" max="40" value="8">
-                    </div>
-                    
-                    <div class="accordion" id="tour-tiers">
-                        <button class="accordion-header" onclick="toggleAccordion()">
-                            <span>Enterprise Tiers (2-4)</span>
-                            <span>+</span>
-                        </button>
-                        <div class="accordion-content" id="tierContent">
-                            <div class="tier-block">
-                                <div class="tier-title">Tier 2</div>
-                                <div class="input-group" style="margin-bottom:8px;">
-                                    <label>Price ($)</label>
-                                    <input type="number" id="t2Price" value="150">
-                                </div>
-                                <div class="input-group">
-                                    <label>Patients/Mo</label>
-                                    <input type="number" id="t2Vol" value="0">
-                                </div>
-                            </div>
-                            <div class="tier-block">
-                                <div class="tier-title">Tier 3</div>
-                                <div class="input-group" style="margin-bottom:8px;">
-                                    <label>Price ($)</label>
-                                    <input type="number" id="t3Price" value="250">
-                                </div>
-                                <div class="input-group">
-                                    <label>Patients/Mo</label>
-                                    <input type="number" id="t3Vol" value="0">
-                                </div>
-                            </div>
-                            <div class="tier-block">
-                                <div class="tier-title">Tier 4</div>
-                                <div class="input-group" style="margin-bottom:8px;">
-                                    <label>Price ($)</label>
-                                    <input type="number" id="t4Price" value="500">
-                                </div>
-                                <div class="input-group">
-                                    <label>Patients/Mo</label>
-                                    <input type="number" id="t4Vol" value="0">
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                <div class="group">
+                    <div class="label-wrap"><label>Retention <span class="help-icon" title="% of patients staying month over month.">?</span></label><span class="val-display" id="s-ret-v">85%</span></div>
+                    <input type="range" id="s-ret" min="50" max="100" value="85">
+                </div>
+                <div class="group">
+                    <div class="label-wrap"><label>New Patients / Mo</label><span class="val-display" id="s-vol-v">8</span></div>
+                    <input type="range" id="s-vol" min="0" max="40" value="8">
+                </div>
 
-                    <div class="section-separator">Provider Capacity</div>
-                    <div class="input-group">
-                        <label>Availability
-                            <div class="mini-toggle">
-                                <button class="mini-btn active" onclick="setUnit('newCap', 'hrs', this)">Hr</button>
-                                <button class="mini-btn" onclick="setUnit('newCap', 'min', this)">Min</button>
-                            </div>
-                        </label>
-                        <input type="number" id="newCapacity" value="20">
+                <div class="tier-accordion">
+                    <button class="tier-trigger" onclick="toggleT(this)"><span>Tier 2 Membership</span><span>+</span></button>
+                    <div class="tier-content">
+                        <div class="group"><label style="font-size:0.7rem; color:var(--text-dim)">Price</label><input type="number" id="t2-p" value="150"></div>
+                        <div class="group"><label style="font-size:0.7rem; color:var(--text-dim)">Monthly Vol</label><input type="number" id="t2-v" value="0"></div>
                     </div>
-                    <div class="input-group">
-                        <label>Time per Patient
-                            <div class="mini-toggle">
-                                <button class="mini-btn" onclick="setUnit('newDur', 'hrs', this)">Hr</button>
-                                <button class="mini-btn active" onclick="setUnit('newDur', 'min', this)">Min</button>
-                            </div>
-                        </label>
-                        <input type="number" id="newDuration" value="30">
+                </div>
+                <div class="tier-accordion">
+                    <button class="tier-trigger" onclick="toggleT(this)"><span>Tier 3 Membership</span><span>+</span></button>
+                    <div class="tier-content">
+                        <div class="group"><label style="font-size:0.7rem; color:var(--text-dim)">Price</label><input type="number" id="t3-p" value="250"></div>
+                        <div class="group"><label style="font-size:0.7rem; color:var(--text-dim)">Monthly Vol</label><input type="number" id="t3-v" value="0"></div>
                     </div>
+                </div>
+
+                <div class="section-separator" style="margin: 30px 0 20px; border-top: 1px solid rgba(255,255,255,0.05);"></div>
+                <div class="group">
+                    <div class="label-wrap">
+                        <label>Weekly Availability</label>
+                        <div class="unit-toggle"><button class="unit-btn active" onclick="uT(this,'s-cap','hr')">Hr</button><button class="unit-btn" onclick="uT(this,'s-cap','min')">Min</button></div>
+                    </div>
+                    <input type="number" id="s-cap" value="20">
+                </div>
+                <div class="group">
+                    <div class="label-wrap">
+                        <label>Time per Patient</label>
+                        <div class="unit-toggle"><button class="unit-btn" onclick="uT(this,'s-dur','hr')">Hr</button><button class="unit-btn active" onclick="uT(this,'s-dur','min')">Min</button></div>
+                    </div>
+                    <input type="number" id="s-dur" value="30">
                 </div>
             </div>
         </div>
 
-        <div class="results-section">
-            <div class="year-selector">
-                <button class="year-btn active" onclick="setYear(1)">Year 1</button>
-                <button class="year-btn" onclick="setYear(2)">Year 2</button>
-                <button class="year-btn" onclick="setYear(3)">Year 3</button>
+        <div class="chart-grid">
+            <div class="glass-card chart-wrap">
+                <canvas id="revChart"></canvas>
             </div>
+            <div class="glass-card chart-wrap" style="display: flex; flex-direction: column; justify-content: center; text-align: center;">
+                <div class="m-label">Year 1 Net Income</div>
+                <div style="font-size: 3rem; font-weight: 300; margin: 20px 0; color:#fff;" id="total-net">$0</div>
+                <div class="m-label" style="color:var(--brand-muted)" id="net-diff">+0% vs Up-front only</div>
+            </div>
+        </div>
 
-            <div class="insights-bar" id="tour-results">
-                <div class="insight-item"><div class="insight-label">Break-Even</div><div class="insight-value" id="resBreakeven">-</div></div>
-                <div class="insight-item"><div class="insight-label">Final MRR</div><div class="insight-value" id="resMRR">$0</div></div>
-                <div class="insight-item"><div class="insight-label">Patient LTV</div><div class="insight-value" id="resLTV">$0</div></div>
-                <div class="insight-item"><div class="insight-label">Old Util.</div><div class="insight-value" id="resOldUtil">0%</div></div>
-                <div class="insight-item"><div class="insight-label">Sub Util.</div><div class="insight-value" id="resNewUtil">0%</div></div>
-                <div class="insight-item"><div class="insight-label">Total Util.</div><div class="insight-value" id="resTotalUtil">0%</div></div>
-            </div>
-
-            <div class="glass-panel combined-card">
-                <div class="stat-box"><div class="stat-label">Total Revenue</div><div class="stat-val" id="totalRev">$0</div><div class="stat-sub">Combined models</div></div>
-                <div class="stat-box"><div class="stat-label">Active Patients</div><div class="stat-val" id="totalPatients">0</div><div class="stat-sub">End of period</div></div>
-                <div class="stat-box"><div class="stat-label">Util Ratio</div><div class="stat-val" id="utilRatio">0:0</div><div class="stat-sub">Old : New</div></div>
-                <div class="stat-box"><div class="stat-label">Efficiency</div><div class="stat-val" id="efficiencyVal">$0</div><div class="stat-sub">Rev per Hour</div></div>
-            </div>
-
-            <div class="metrics-grid">
-                <div class="glass-panel metric-card"><div class="insight-label">Up-front Model</div><div class="big-val" id="bigOld">$0</div><div class="stat-sub">Linear Revenue</div></div>
-                <div class="glass-panel metric-card"><div class="insight-label">Subscription Model</div><div class="big-val" id="bigNew">$0</div><div class="stat-sub">Compounding Revenue</div></div>
-                <div class="glass-panel metric-card highlight"><div class="insight-label">Difference</div><div class="big-val" id="bigDiff">$0</div><div class="stat-sub" id="diffPercent">+0%</div></div>
-            </div>
-
-            <div class="charts-row">
-                <div class="glass-panel chart-box"><div class="chart-title">Revenue Comparison</div><canvas id="revChart"></canvas></div>
-                <div class="glass-panel chart-box"><div class="chart-title">Patient Volume</div><canvas id="volChart"></canvas></div>
-            </div>
-
-            <div class="glass-panel table-box">
-                <div class="chart-title">Period Breakdown</div>
-                <table><thead><tr><th>Period</th><th>Up-front</th><th>Sub Rev</th><th>Combined</th><th>Diff</th><th>Old Hrs</th><th>New Hrs</th></tr></thead><tbody id="tableBody"></tbody></table>
-            </div>
-
-            <div class="glass-panel disclaimer">
-                <strong>Important Disclaimer:</strong> Reneu Wellness Club LLC does not guarantee these projections. Figures are estimates only.
-            </div>
+        <div class="glass-card" style="padding: 40px; margin-top: 40px; font-size: 0.7rem; color: var(--text-dim); line-height: 1.8;">
+            <strong>Projections Disclaimer:</strong> These figures are generated for illustrative purposes only. Actual results will vary based on clinical performance, market demand, and patient retention. Reneu Wellness Club LLC provides administrative support; all clinical outcomes remain the responsibility of the provider.
         </div>
     </div>
 
     <script>
-        /* --- ORB ANIMATION --- */
+        /* --- GOLD DUST ORB --- */
         const canvas = document.getElementById('orbCanvas');
         const ctx = canvas.getContext('2d');
-        let width = canvas.width, height = canvas.height;
         let particles = [];
-        const numParticles = 1200, sphereRadius = 100, rotationSpeed = 0.005;
-        let angleX = 0, angleY = 0;
-
-        for(let i=0; i<numParticles; i++) {
-            const theta = Math.random() * Math.PI * 2, phi = Math.acos((Math.random() * 2) - 1);
+        const num = 1800;
+        
+        for(let i=0; i<num; i++){
+            const t = Math.random()*Math.PI*2, p = Math.acos(Math.random()*2-1);
             particles.push({
-                x: sphereRadius * Math.sin(phi) * Math.cos(theta),
-                y: sphereRadius * Math.sin(phi) * Math.sin(theta),
-                z: sphereRadius * Math.cos(phi),
-                size: Math.random()*1.5+0.5, alpha: 0.3+Math.random()*0.7
+                x: 60*Math.sin(p)*Math.cos(t), y: 60*Math.sin(p)*Math.sin(t), z: 60*Math.cos(p),
+                s: Math.random()*1.2, a: Math.random()
             });
         }
 
-        function animateOrb() {
-            ctx.clearRect(0, 0, width, height);
-            const cx = width/2, cy = height/2;
-            angleX += rotationSpeed; angleY += rotationSpeed*0.6;
-            const sx = Math.sin(angleX), cx_ = Math.cos(angleX), sy = Math.sin(angleY), cy_ = Math.cos(angleY);
-
-            particles.forEach(p => {
-                let x1 = p.x*cy_ - p.z*sy, z1 = p.z*cy_ + p.x*sy;
-                let y1 = p.y*cx_ - z1*sx, z2 = z1*cx_ + p.y*sx;
-                const scale = 250/(250-z2);
-                if(scale>0) {
-                    ctx.beginPath();
-                    ctx.arc(cx+x1*scale, cy+y1*scale, p.size*scale, 0, Math.PI*2);
-                    ctx.fillStyle = `rgba(248,204,116,${p.alpha * scale * 0.5})`;
-                    ctx.fill();
-                }
+        let rx=0, ry=0;
+        function drawOrb(){
+            ctx.clearRect(0,0,160,160);
+            rx+=0.005; ry+=0.003;
+            const sx=Math.sin(rx), cx=Math.cos(rx), sy=Math.sin(ry), cy=Math.cos(ry);
+            particles.forEach(pt => {
+                let x = pt.x*cy - pt.z*sy, z = pt.z*cy + pt.x*sy;
+                let y = pt.y*cx - z*sx; z = z*cx + pt.y*sx;
+                const sc = 200/(200-z);
+                ctx.beginPath();
+                ctx.arc(80+x*sc, 80+y*sc, pt.s*sc, 0, Math.PI*2);
+                ctx.fillStyle = `rgba(248,204,116,${pt.a * sc * 0.4})`;
+                ctx.fill();
             });
-            requestAnimationFrame(animateOrb);
+            requestAnimationFrame(drawOrb);
         }
-        animateOrb();
+        drawOrb();
 
-        /* --- LOGO SCROLL --- */
-        window.addEventListener('scroll', () => {
-            const logo = document.getElementById('logoContainer');
-            if (window.scrollY > 50) logo.classList.add('scrolled');
-            else logo.classList.remove('scrolled');
-        });
+        /* --- UI HELPERS --- */
+        window.onscroll = () => document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
 
-        /* --- CALCULATOR LOGIC --- */
-        let periodMode = 'monthly', selectedYear = 1;
-        const units = { oldCap: 'hrs', oldDur: 'min', newCap: 'hrs', newDur: 'min' };
-        let revChartInstance = null, volChartInstance = null;
-
-        document.querySelectorAll('input').forEach(i => i.addEventListener('input', (e) => {
-            if(e.target.id.includes('Val')) return;
-            if(document.getElementById(e.target.id + 'Val')) document.getElementById(e.target.id + 'Val').innerText = e.target.value + (e.target.id === 'retention' ? '%' : '');
-            calculate();
-        }));
-
-        // Accordion
-        function toggleAccordion() {
-            const content = document.getElementById('tierContent');
+        function toggleT(btn){
+            const content = btn.nextElementSibling;
             content.classList.toggle('open');
+            btn.querySelector('span:last-child').innerText = content.classList.contains('open') ? '−' : '+';
         }
 
-        function setPeriod(mode) {
-            periodMode = mode;
-            document.getElementById('btnMonthly').className = mode === 'monthly' ? 'view-btn active' : 'view-btn';
-            document.getElementById('btnQuarterly').className = mode === 'quarterly' ? 'view-btn active' : 'view-btn';
-            document.querySelectorAll('.period-label').forEach(el => el.innerText = mode === 'monthly' ? 'Month' : 'Quarter');
-            calculate();
-        }
-
-        function setYear(y) {
-            selectedYear = y;
-            document.querySelectorAll('.year-btn').forEach((b, i) => b.className = (i+1)===y ? 'year-btn active' : 'year-btn');
-            calculate();
-        }
-
-        function setUnit(key, unit, btn) {
-            units[key] = unit;
-            btn.parentElement.querySelectorAll('.mini-btn').forEach(b => b.classList.remove('active'));
+        const unitStore = { 'u-cap':'hr', 'u-dur':'min', 's-cap':'hr', 's-dur':'min' };
+        function uT(btn, id, unit){
+            unitStore[id] = unit;
+            btn.parentElement.querySelectorAll('button').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             calculate();
         }
 
-        function getHours(val, type) { return type === 'hrs' ? val : val/60; }
+        /* --- LOGIC --- */
+        let chart = null;
+        function calculate(){
+            const uP = parseFloat(document.getElementById('u-price').value)||0;
+            const uV = parseFloat(document.getElementById('u-vol').value)||0;
+            document.getElementById('u-vol-v').innerText = uV;
 
-        function calculate() {
-            const oldPrice = parseFloat(document.getElementById('oldPrice').value)||0;
-            const oldVol = parseFloat(document.getElementById('oldClients').value)||0;
-            const oldCap = getHours(parseFloat(document.getElementById('oldCapacity').value)||0, units.oldCap) * 4.33;
-            const oldDur = getHours(parseFloat(document.getElementById('oldDuration').value)||0, units.oldDur);
+            const sP = parseFloat(document.getElementById('s-price').value)||0;
+            const sV = parseFloat(document.getElementById('s-vol').value)||0;
+            document.getElementById('s-vol-v').innerText = sV;
+            const ret = parseFloat(document.getElementById('s-ret').value)/100;
+            document.getElementById('s-ret-v').innerText = Math.round(ret*100)+'%';
 
-            // Sub Model - Base + Tiers
-            const t1Price = parseFloat(document.getElementById('newPrice').value)||0;
-            const t1Vol = parseFloat(document.getElementById('newClients').value)||0;
-            const t2Price = parseFloat(document.getElementById('t2Price').value)||0;
-            const t2Vol = parseFloat(document.getElementById('t2Vol').value)||0;
-            const t3Price = parseFloat(document.getElementById('t3Price').value)||0;
-            const t3Vol = parseFloat(document.getElementById('t3Vol').value)||0;
-            const t4Price = parseFloat(document.getElementById('t4Price').value)||0;
-            const t4Vol = parseFloat(document.getElementById('t4Vol').value)||0;
+            // Additional Tiers
+            const t2P = parseFloat(document.getElementById('t2-p').value)||0;
+            const t2V = parseFloat(document.getElementById('t2-v').value)||0;
+            const t3P = parseFloat(document.getElementById('t3-p').value)||0;
+            const t3V = parseFloat(document.getElementById('t3-v').value)||0;
 
-            // Weighted Avg Price and Total Volume
-            const totalNewVolStart = t1Vol + t2Vol + t3Vol + t4Vol;
-            const weightedPrice = totalNewVolStart > 0 ? 
-                ((t1Price*t1Vol)+(t2Price*t2Vol)+(t3Price*t3Vol)+(t4Price*t4Vol))/totalNewVolStart : 0;
+            const totalNewVol = sV + t2V + t3V;
+            const avgSubPrice = totalNewVol > 0 ? (sP*sV + t2P*t2V + t3P*t3V)/totalNewVol : 0;
 
-            const retention = (parseFloat(document.getElementById('retention').value)||0)/100;
-            const newCap = getHours(parseFloat(document.getElementById('newCapacity').value)||0, units.newCap) * 4.33;
-            const newDur = getHours(parseFloat(document.getElementById('newDuration').value)||0, units.newDur);
+            let currentActive = 0, upData = [], subData = [], be = null;
+            let totalHrsU = 0, totalHrsS = 0;
 
-            const mult = periodMode === 'quarterly' ? 3 : 1;
-            const months = selectedYear * 12;
-            let currentActive = 0, data = [], cumulativeOld = 0, cumulativeNew = 0, breakEven = null;
+            for(let i=1; i<=12; i++){
+                const uRev = uP * uV;
+                upData.push(uRev);
 
-            for(let m=1; m<=months; m++) {
-                const oldRev = oldPrice * oldVol * mult;
-                const oldHrs = oldVol * oldDur * mult;
+                currentActive = (currentActive * ret) + totalNewVol;
+                const sRev = currentActive * avgSubPrice;
+                subData.push(sRev);
 
-                currentActive = (currentActive * (retention**mult)) + (totalNewVolStart * mult);
-                const newRev = currentActive * weightedPrice * mult;
-                const newHrs = currentActive * newDur * mult;
-
-                if(!breakEven && newRev >= oldRev) breakEven = m;
-                cumulativeOld += oldRev; cumulativeNew += newRev;
-
-                data.push({ 
-                    month: m, oldRev, newRev, combined: oldRev+newRev, diff: newRev-oldRev, 
-                    oldHrs, newHrs, active: currentActive 
-                });
+                if(!be && sRev > uRev) be = i;
             }
 
-            const viewData = data.slice((selectedYear-1)*12, selectedYear*12);
-            const totalOld = viewData.reduce((a,b)=>a+b.oldRev,0);
-            const totalNew = viewData.reduce((a,b)=>a+b.newRev,0);
-            const last = viewData[viewData.length-1];
+            // Metrics
+            document.getElementById('m-be').innerText = be ? `Month ${be}` : '-';
+            document.getElementById('m-mrr').innerText = '$' + Math.round(subData[11]).toLocaleString();
+            document.getElementById('m-ltv').innerText = '$' + Math.round(avgSubPrice / (1-ret || 1)).toLocaleString();
 
-            // Updates
-            document.getElementById('resBreakeven').innerText = breakEven ? `Mo ${breakEven}` : '-';
-            document.getElementById('resMRR').innerText = '$' + Math.round(last.newRev/mult).toLocaleString();
-            document.getElementById('resLTV').innerText = '$' + Math.round((1-retention)>0 ? weightedPrice/(1-retention) : 0).toLocaleString();
+            const netSub = subData.reduce((a,b)=>a+b, 0);
+            const netUp = upData.reduce((a,b)=>a+b, 0);
+            document.getElementById('total-net').innerText = '$' + Math.round(netSub + netUp).toLocaleString();
+            const diff = netUp > 0 ? Math.round(((netSub)/netUp)*100) : 0;
+            document.getElementById('net-diff').innerText = `+${diff}% vs Up-front only`;
 
-            const oldUtil = (last.oldHrs / (oldCap*mult))*100;
-            const newUtil = (last.newHrs / (newCap*mult))*100;
-            const totalUtil = ((last.oldHrs+last.newHrs) / ((oldCap+newCap)*mult))*100;
+            // Util
+            const uCap = (parseFloat(document.getElementById('u-cap').value)||0) * (unitStore['u-cap'] === 'min' ? 1/60 : 1) * 4.33;
+            const uDur = (parseFloat(document.getElementById('u-dur').value)||0) * (unitStore['u-dur'] === 'min' ? 1/60 : 1);
+            const sCap = (parseFloat(document.getElementById('s-cap').value)||0) * (unitStore['s-cap'] === 'min' ? 1/60 : 1) * 4.33;
+            const sDur = (parseFloat(document.getElementById('s-dur').value)||0) * (unitStore['s-dur'] === 'min' ? 1/60 : 1);
 
-            updateUtil('resOldUtil', oldUtil); updateUtil('resNewUtil', newUtil); updateUtil('resTotalUtil', totalUtil);
+            const uUtil = Math.round(((uV * uDur) / uCap)*100)||0;
+            const sUtil = Math.round(((currentActive * sDur) / sCap)*100)||0;
+            document.getElementById('m-u-util').innerText = uUtil+'%';
+            document.getElementById('m-s-util').innerText = sUtil+'%';
+            document.getElementById('m-total').innerText = Math.round((uUtil + sUtil)/2)+'%';
 
-            document.getElementById('bigOld').innerText = '$'+Math.round(totalOld).toLocaleString();
-            document.getElementById('bigNew').innerText = '$'+Math.round(totalNew).toLocaleString();
-            const diff = totalNew - totalOld;
-            document.getElementById('bigDiff').innerText = (diff>0?'+':'') + '$' + Math.round(diff).toLocaleString();
-            document.getElementById('diffPercent').innerText = (totalOld>0 ? Math.round((diff/totalOld)*100) : 0) + '%';
-            
-            document.getElementById('totalRev').innerText = '$'+Math.round(totalOld+totalNew).toLocaleString();
-            document.getElementById('totalPatients').innerText = Math.round(last.active + (oldVol*mult));
-            
-            updateTable(viewData);
-            updateCharts(viewData);
+            updateChart(upData, subData);
         }
 
-        function updateUtil(id, val) {
-            const el = document.getElementById(id);
-            el.innerText = Math.round(val)+'%';
-            el.className = 'insight-value ' + (val>100?'bad':(val>80?'good':''));
-        }
-
-        function updateTable(data) {
-            const tbody = document.getElementById('tableBody'); tbody.innerHTML = '';
-            let be = false;
-            data.forEach(r => {
-                const tr = document.createElement('tr');
-                if(r.diff>=0 && !be) { tr.className='breakeven-row'; be=true; }
-                const lbl = periodMode === 'monthly' ? ((selectedYear-1)*12+r.month) : r.month;
-                tr.innerHTML = `<td>${periodMode==='quarterly'?'Q':'Mo'} ${lbl}</td><td>$${Math.round(r.oldRev).toLocaleString()}</td><td>$${Math.round(r.newRev).toLocaleString()}</td><td><strong>$${Math.round(r.combined).toLocaleString()}</strong></td><td style="color:${r.diff>=0?'var(--positive)':'var(--negative)'}">${r.diff>=0?'+':''}$${Math.round(r.diff).toLocaleString()}</td><td>${Math.round(r.oldHrs)}</td><td>${Math.round(r.newHrs)}</td>`;
-                tbody.appendChild(tr);
-            });
-        }
-
-        function updateCharts(data) {
-            const labels = data.map(d => (periodMode==='quarterly'?'Q':'Mo ')+((selectedYear-1)*12+d.month));
-            if(revChartInstance) revChartInstance.destroy();
-            revChartInstance = new Chart(document.getElementById('revChart'), {
+        function updateChart(up, sub){
+            const ctx = document.getElementById('revChart').getContext('2d');
+            if(chart) chart.destroy();
+            chart = new Chart(ctx, {
                 type: 'line',
-                data: { labels, datasets: [{label:'Up-front', data:data.map(d=>d.oldRev), borderColor:'rgba(255,255,255,0.3)'}, {label:'Sub', data:data.map(d=>d.newRev), borderColor:'#f8cc74', backgroundColor:'rgba(248,204,116,0.1)', fill:true}] },
-                options: { responsive:true, plugins:{legend:{labels:{color:'#aaa'}}}, scales:{y:{grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#666'}}, x:{display:false}} }
+                data: {
+                    labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
+                    datasets: [
+                        { label: 'Subscription', data: sub, borderColor: '#f8cc74', backgroundColor: 'rgba(248,204,116,0.05)', fill: true, tension: 0.4 },
+                        { label: 'Up-front', data: up, borderColor: 'rgba(255,255,255,0.2)', borderDash: [5,5], tension: 0 }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#666' } },
+                        x: { grid: { display: false }, ticks: { color: '#666' } }
+                    }
+                }
             });
-
-            if(volChartInstance) volChartInstance.destroy();
-            volChartInstance = new Chart(document.getElementById('volChart'), {
-                type: 'bar',
-                data: { labels, datasets: [{label:'Active', data:data.map(d=>d.active), backgroundColor:'#6ee7b7'}] },
-                options: { responsive:true, plugins:{legend:{display:false}}, scales:{y:{grid:{color:'rgba(255,255,255,0.05)'}, ticks:{color:'#666'}}, x:{display:false}} }
-            });
         }
 
-        /* --- TOUR LOGIC --- */
-        const steps = [
-            { el: 'tour-intro', title: 'Welcome', text: 'This calculator compares traditional revenue vs. subscription models.' },
-            { el: 'tour-period', title: 'View Settings', text: 'Toggle between Monthly and Quarterly views here.' },
-            { el: 'tour-upfront', title: 'Up-front Model', text: 'Set your one-time program pricing and capacity.' },
-            { el: 'tour-sub', title: 'Subscription', text: 'Define your base membership tier here.' },
-            { el: 'tour-tiers', title: 'Enterprise', text: 'Click to expand and add Enterprise/Higher tiers.' },
-            { el: 'tour-results', title: 'Insights', text: 'Key metrics like Break-even and MRR appear here.' }
-        ];
-        let currStep = 0;
-
-        document.getElementById('orbCanvas').addEventListener('click', () => {
-            currStep = 0;
-            document.getElementById('tourOverlay').classList.add('active');
-            showStep();
-        });
-
-        function showStep() {
-            document.querySelectorAll('.highlight-tour').forEach(el => el.classList.remove('highlight-tour'));
-            const s = steps[currStep];
-            const el = document.getElementById(s.el);
-            el.scrollIntoView({behavior:'smooth', block:'center'});
-            el.classList.add('highlight-tour');
-
-            const tooltip = document.getElementById('tourTooltip');
-            const rect = el.getBoundingClientRect();
-            
-            // Positioning logic
-            let top = rect.bottom + 20;
-            if(top + 200 > window.innerHeight) top = rect.top - 220; // Flip if too low
-            
-            tooltip.style.top = top + 'px';
-            tooltip.style.left = Math.max(20, rect.left) + 'px';
-            
-            document.getElementById('tourTitle').innerText = s.title;
-            document.getElementById('tourText').innerText = s.text;
-            tooltip.classList.add('active');
-        }
-
-        function nextStep() {
-            currStep++;
-            if(currStep >= steps.length) endTour();
-            else showStep();
-        }
-
-        function endTour() {
-            document.getElementById('tourOverlay').classList.remove('active');
-            document.getElementById('tourTooltip').classList.remove('active');
-            document.querySelectorAll('.highlight-tour').forEach(el => el.classList.remove('highlight-tour'));
-        }
-
+        document.querySelectorAll('input').forEach(i => i.oninput = calculate);
         calculate();
     </script>
 </body>

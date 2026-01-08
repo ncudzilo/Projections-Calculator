@@ -10,22 +10,22 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         :root {
-            --bg-base: #0a0908;
-            --bg-gradient-1: #0f0e0d;
-            --bg-gradient-2: #141312;
+            --bg-base: #1a1816;
+            --bg-gradient-1: #221f1d;
+            --bg-gradient-2: #2a2624;
             --brand: #f8cc74;
-            --brand-soft: rgba(248, 204, 116, 0.6);
-            --brand-glow: rgba(248, 204, 116, 0.08);
-            --brand-glow-subtle: rgba(248, 204, 116, 0.04);
-            --brand-border: rgba(248, 204, 116, 0.12);
-            --brand-border-hover: rgba(248, 204, 116, 0.2);
-            --text-primary: rgba(255, 255, 255, 0.92);
-            --text-secondary: rgba(255, 255, 255, 0.6);
-            --text-muted: rgba(255, 255, 255, 0.35);
+            --brand-soft: rgba(248, 204, 116, 0.7);
+            --brand-glow: rgba(248, 204, 116, 0.12);
+            --brand-glow-subtle: rgba(248, 204, 116, 0.06);
+            --brand-border: rgba(248, 204, 116, 0.2);
+            --brand-border-hover: rgba(248, 204, 116, 0.35);
+            --text-primary: rgba(255, 255, 255, 0.95);
+            --text-secondary: rgba(255, 255, 255, 0.75);
+            --text-muted: rgba(255, 255, 255, 0.5);
             --positive: #6ee7b7;
             --negative: #fca5a5;
-            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(248, 204, 116, 0.06);
-            --card-shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(248, 204, 116, 0.12), 0 0 60px rgba(248, 204, 116, 0.06);
+            --card-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(248, 204, 116, 0.1);
+            --card-shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(248, 204, 116, 0.2), 0 0 60px rgba(248, 204, 116, 0.08);
         }
         
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -44,9 +44,9 @@
             position: fixed;
             inset: 0;
             background: 
-                radial-gradient(ellipse 120% 80% at 10% 0%, rgba(248, 204, 116, 0.06) 0%, transparent 50%),
-                radial-gradient(ellipse 80% 60% at 90% 100%, rgba(248, 204, 116, 0.04) 0%, transparent 50%),
-                radial-gradient(ellipse 100% 50% at 50% 50%, rgba(248, 204, 116, 0.02) 0%, transparent 60%);
+                radial-gradient(ellipse 120% 80% at 10% 0%, rgba(248, 204, 116, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse 80% 60% at 90% 100%, rgba(248, 204, 116, 0.06) 0%, transparent 50%),
+                radial-gradient(ellipse 100% 50% at 50% 50%, rgba(248, 204, 116, 0.04) 0%, transparent 60%);
             pointer-events: none;
             z-index: 0;
         }
@@ -69,7 +69,7 @@
             height: 90px;
             width: auto;
             transition: all 0.4s ease;
-            filter: drop-shadow(0 0 20px rgba(248, 204, 116, 0.2));
+            filter: drop-shadow(0 0 20px rgba(248, 204, 116, 0.3));
         }
         
         .logo-container.scrolled .logo-svg {
@@ -104,16 +104,16 @@
             letter-spacing: 0.2em;
             text-transform: uppercase;
             color: var(--brand);
-            opacity: 0.7;
+            opacity: 0.85;
         }
         
         /* Enhanced Glass Panels */
         .glass-panel {
             position: relative;
             background: linear-gradient(135deg, 
-                rgba(248, 204, 116, 0.03) 0%, 
-                rgba(248, 204, 116, 0.015) 50%,
-                rgba(248, 204, 116, 0.025) 100%);
+                rgba(248, 204, 116, 0.05) 0%, 
+                rgba(248, 204, 116, 0.025) 50%,
+                rgba(248, 204, 116, 0.04) 100%);
             border: 1px solid var(--brand-border);
             border-radius: 20px;
             box-shadow: var(--card-shadow);
@@ -125,7 +125,7 @@
             content: '';
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 50% 0%, rgba(248, 204, 116, 0.04) 0%, transparent 60%);
+            background: radial-gradient(circle at 50% 0%, rgba(248, 204, 116, 0.06) 0%, transparent 60%);
             opacity: 0;
             transition: opacity 0.4s ease;
             pointer-events: none;
@@ -147,19 +147,19 @@
             height: 28px;
             margin-left: 8px;
             position: relative;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.4);
             border-radius: 14px;
-            border: 1px solid rgba(248, 204, 116, 0.15);
+            border: 1px solid rgba(248, 204, 116, 0.2);
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4);
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
             display: inline-block;
             vertical-align: middle;
         }
         
         .mini-toggle:hover {
-            border-color: rgba(248, 204, 116, 0.25);
-            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 12px rgba(248, 204, 116, 0.1);
+            border-color: rgba(248, 204, 116, 0.35);
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 12px rgba(248, 204, 116, 0.15);
         }
         
         .mini-toggle .toggle-option {
@@ -187,10 +187,10 @@
             left: 4px;
             width: 36px;
             height: 20px;
-            background: linear-gradient(135deg, rgba(248, 204, 116, 0.3) 0%, rgba(248, 204, 116, 0.2) 100%);
-            border: 1px solid rgba(248, 204, 116, 0.4);
+            background: linear-gradient(135deg, rgba(248, 204, 116, 0.4) 0%, rgba(248, 204, 116, 0.3) 100%);
+            border: 1px solid rgba(248, 204, 116, 0.5);
             border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(248, 204, 116, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 8px rgba(248, 204, 116, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.1);
             transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1;
         }
@@ -221,9 +221,9 @@
         
         .input-panel:last-child {
             background: linear-gradient(135deg, 
-                rgba(248, 204, 116, 0.035) 0%, 
-                rgba(248, 204, 116, 0.02) 50%,
-                rgba(248, 204, 116, 0.03) 100%);
+                rgba(248, 204, 116, 0.055) 0%, 
+                rgba(248, 204, 116, 0.03) 50%,
+                rgba(248, 204, 116, 0.045) 100%);
         }
         
         .panel-header {
@@ -232,7 +232,7 @@
             gap: 12px;
             margin-bottom: 16px;
             padding-bottom: 12px;
-            border-bottom: 1px solid rgba(248, 204, 116, 0.08);
+            border-bottom: 1px solid rgba(248, 204, 116, 0.12);
         }
         
         .panel-icon {
@@ -242,8 +242,8 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, rgba(248, 204, 116, 0.1) 0%, rgba(248, 204, 116, 0.05) 100%);
-            box-shadow: 0 2px 12px rgba(248, 204, 116, 0.15);
+            background: linear-gradient(135deg, rgba(248, 204, 116, 0.15) 0%, rgba(248, 204, 116, 0.08) 100%);
+            box-shadow: 0 2px 12px rgba(248, 204, 116, 0.2);
         }
         
         .panel-icon svg {
@@ -282,27 +282,27 @@
         .input-group input[type="number"] {
             width: 100%;
             padding: 10px 12px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(248, 204, 116, 0.12);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(248, 204, 116, 0.18);
             border-radius: 10px;
             font-size: 0.85rem;
             font-family: inherit;
             color: var(--text-primary);
             transition: all 0.3s ease;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
         }
         
         .input-group input[type="number"]:focus {
             outline: none;
-            border-color: rgba(248, 204, 116, 0.3);
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 0 3px rgba(248, 204, 116, 0.1);
+            border-color: rgba(248, 204, 116, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 0 0 3px rgba(248, 204, 116, 0.15);
         }
         
         input[type="range"] {
             width: 100%;
             height: 6px;
-            background: linear-gradient(90deg, rgba(248, 204, 116, 0.2) 0%, rgba(248, 204, 116, 0.05) 100%);
+            background: linear-gradient(90deg, rgba(248, 204, 116, 0.25) 0%, rgba(248, 204, 116, 0.08) 100%);
             border-radius: 3px;
             outline: none;
             -webkit-appearance: none;
@@ -318,13 +318,13 @@
             background: linear-gradient(135deg, var(--brand) 0%, rgba(248, 204, 116, 0.9) 100%);
             border-radius: 50%;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(248, 204, 116, 0.4);
+            box-shadow: 0 2px 8px rgba(248, 204, 116, 0.5);
             transition: all 0.2s ease;
         }
         
         input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.15);
-            box-shadow: 0 3px 12px rgba(248, 204, 116, 0.6);
+            box-shadow: 0 3px 12px rgba(248, 204, 116, 0.7);
         }
         
         input[type="range"]::-moz-range-thumb {
@@ -334,13 +334,13 @@
             border-radius: 50%;
             border: none;
             cursor: pointer;
-            box-shadow: 0 2px 8px rgba(248, 204, 116, 0.4);
+            box-shadow: 0 2px 8px rgba(248, 204, 116, 0.5);
             transition: all 0.2s ease;
         }
         
         input[type="range"]::-moz-range-thumb:hover {
             transform: scale(1.15);
-            box-shadow: 0 3px 12px rgba(248, 204, 116, 0.6);
+            box-shadow: 0 3px 12px rgba(248, 204, 116, 0.7);
         }
         
         .section-label {
@@ -349,7 +349,7 @@
             text-transform: uppercase;
             letter-spacing: 0.12em;
             color: var(--brand);
-            opacity: 0.6;
+            opacity: 0.7;
             margin-top: 8px;
             grid-column: 1 / -1;
         }
@@ -357,7 +357,7 @@
         /* Compact Accordion/Tier Sections */
         .tier-section {
             margin-top: 10px;
-            border-top: 1px solid rgba(248, 204, 116, 0.06);
+            border-top: 1px solid rgba(248, 204, 116, 0.1);
             padding-top: 10px;
         }
         
@@ -367,16 +367,16 @@
             justify-content: space-between;
             cursor: pointer;
             padding: 6px 10px;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.25);
             border-radius: 8px;
-            border: 1px solid rgba(248, 204, 116, 0.1);
+            border: 1px solid rgba(248, 204, 116, 0.15);
             transition: all 0.2s ease;
             margin-bottom: 6px;
         }
         
         .tier-header:hover {
-            background: rgba(0, 0, 0, 0.4);
-            border-color: rgba(248, 204, 116, 0.2);
+            background: rgba(0, 0, 0, 0.35);
+            border-color: rgba(248, 204, 116, 0.3);
         }
         
         .tier-header-content {
@@ -389,7 +389,7 @@
             width: 22px;
             height: 22px;
             border-radius: 6px;
-            background: linear-gradient(135deg, rgba(248, 204, 116, 0.2) 0%, rgba(248, 204, 116, 0.1) 100%);
+            background: linear-gradient(135deg, rgba(248, 204, 116, 0.25) 0%, rgba(248, 204, 116, 0.15) 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -437,7 +437,7 @@
             grid-template-columns: 1fr 1fr;
             gap: 8px;
             padding: 8px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.15);
             border-radius: 8px;
         }
         
@@ -486,7 +486,7 @@
             font-size: 1.2rem;
             font-weight: 700;
             color: var(--brand);
-            text-shadow: 0 0 20px rgba(248, 204, 116, 0.3);
+            text-shadow: 0 0 20px rgba(248, 204, 116, 0.4);
         }
         
         .insight-value.positive { color: var(--positive); }
@@ -505,7 +505,7 @@
         }
         
         .metric-card.highlight {
-            background: linear-gradient(135deg, rgba(248, 204, 116, 0.06) 0%, rgba(248, 204, 116, 0.02) 100%);
+            background: linear-gradient(135deg, rgba(248, 204, 116, 0.08) 0%, rgba(248, 204, 116, 0.04) 100%);
         }
         
         .metric-label {
@@ -521,12 +521,12 @@
             font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 8px;
-            text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
         }
         
         .metric-card.highlight .metric-value {
             color: var(--brand);
-            text-shadow: 0 0 20px rgba(248, 204, 116, 0.3);
+            text-shadow: 0 0 20px rgba(248, 204, 116, 0.4);
         }
         
         .metric-subtext {
@@ -544,8 +544,8 @@
         
         .year-btn {
             padding: 10px 24px;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(248, 204, 116, 0.15);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(248, 204, 116, 0.2);
             border-radius: 10px;
             font-size: 0.8rem;
             font-weight: 600;
@@ -553,19 +553,19 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: inherit;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
         }
         
         .year-btn:hover {
-            border-color: rgba(248, 204, 116, 0.25);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 12px rgba(248, 204, 116, 0.1);
+            border-color: rgba(248, 204, 116, 0.35);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 0 12px rgba(248, 204, 116, 0.15);
         }
         
         .year-btn.active {
-            background: linear-gradient(135deg, rgba(248, 204, 116, 0.3) 0%, rgba(248, 204, 116, 0.2) 100%);
-            border-color: rgba(248, 204, 116, 0.4);
+            background: linear-gradient(135deg, rgba(248, 204, 116, 0.4) 0%, rgba(248, 204, 116, 0.3) 100%);
+            border-color: rgba(248, 204, 116, 0.5);
             color: var(--brand);
-            box-shadow: 0 2px 8px rgba(248, 204, 116, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.1);
+            box-shadow: 0 2px 8px rgba(248, 204, 116, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.1);
         }
         
         /* Charts */
@@ -599,7 +599,7 @@
         th, td {
             padding: 14px 16px;
             text-align: left;
-            border-bottom: 1px solid rgba(248, 204, 116, 0.06);
+            border-bottom: 1px solid rgba(248, 204, 116, 0.1);
             font-size: 0.8rem;
         }
         
@@ -609,18 +609,18 @@
             letter-spacing: 0.08em;
             color: var(--text-muted);
             font-weight: 600;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.25);
         }
         
         tr:hover td { 
-            background: rgba(248, 204, 116, 0.03);
+            background: rgba(248, 204, 116, 0.05);
         }
         
         .positive { color: var(--positive); font-weight: 600; }
         .negative { color: var(--negative); font-weight: 600; }
         
         .breakeven-row td {
-            background: rgba(248, 204, 116, 0.06) !important;
+            background: rgba(248, 204, 116, 0.08) !important;
             border-left: 3px solid var(--brand);
         }
         
@@ -632,7 +632,7 @@
             text-transform: uppercase;
             letter-spacing: 0.12em;
             color: var(--brand);
-            opacity: 0.7;
+            opacity: 0.8;
             margin-bottom: 12px;
             display: flex;
             align-items: center;
@@ -673,16 +673,16 @@
             inset: 0;
             border-radius: 50%;
             background: radial-gradient(circle at 30% 30%, 
-                rgba(255, 245, 215, 0.15) 0%,
-                rgba(248, 204, 116, 0.08) 25%,
-                rgba(248, 204, 116, 0.04) 50%,
-                rgba(10, 9, 8, 0.8) 75%,
+                rgba(255, 245, 215, 0.2) 0%,
+                rgba(248, 204, 116, 0.12) 25%,
+                rgba(248, 204, 116, 0.06) 50%,
+                rgba(26, 24, 22, 0.8) 75%,
                 rgba(0, 0, 0, 0.95) 100%
             );
             box-shadow: 
-                inset 0 -8px 20px rgba(0, 0, 0, 0.4),
-                inset 0 8px 20px rgba(255, 255, 255, 0.08),
-                0 4px 20px rgba(248, 204, 116, 0.3);
+                inset 0 -8px 20px rgba(0, 0, 0, 0.3),
+                inset 0 8px 20px rgba(255, 255, 255, 0.1),
+                0 4px 20px rgba(248, 204, 116, 0.4);
             transform-style: preserve-3d;
             animation: sphereRotate 20s linear infinite;
         }
@@ -704,17 +704,17 @@
             position: absolute;
             width: 1.5px;
             height: 1.5px;
-            background: radial-gradient(circle, rgba(255, 250, 230, 1) 0%, rgba(248, 204, 116, 0.8) 40%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 250, 230, 1) 0%, rgba(248, 204, 116, 0.9) 40%, transparent 70%);
             border-radius: 50%;
             filter: blur(0.3px);
-            box-shadow: 0 0 3px rgba(248, 204, 116, 0.6);
+            box-shadow: 0 0 3px rgba(248, 204, 116, 0.7);
             animation: photonFloat 3s ease-in-out infinite;
         }
         
         @keyframes photonFloat {
             0%, 100% { 
                 transform: translate(0, 0) scale(1);
-                opacity: 0.8;
+                opacity: 0.9;
             }
             25% { 
                 transform: translate(1px, -1px) scale(1.1);
@@ -722,11 +722,11 @@
             }
             50% { 
                 transform: translate(-0.5px, 0.5px) scale(0.9);
-                opacity: 0.7;
+                opacity: 0.8;
             }
             75% { 
                 transform: translate(-1px, -0.5px) scale(1.05);
-                opacity: 0.9;
+                opacity: 0.95;
             }
         }
         
@@ -734,9 +734,9 @@
             position: absolute;
             inset: -24px;
             background: radial-gradient(circle, 
-                rgba(248, 204, 116, 0.25) 0%, 
-                rgba(248, 204, 116, 0.12) 30%,
-                rgba(248, 204, 116, 0.04) 50%,
+                rgba(248, 204, 116, 0.3) 0%, 
+                rgba(248, 204, 116, 0.15) 30%,
+                rgba(248, 204, 116, 0.06) 50%,
                 transparent 70%
             );
             animation: glowPulse 3s ease-in-out infinite;
@@ -747,11 +747,11 @@
         @keyframes glowPulse {
             0%, 100% { 
                 transform: scale(1);
-                opacity: 0.6;
+                opacity: 0.7;
             }
             50% { 
                 transform: scale(1.12);
-                opacity: 0.35;
+                opacity: 0.45;
             }
         }
         
@@ -761,10 +761,10 @@
             left: 25%;
             width: 35%;
             height: 35%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 60%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.5) 0%, transparent 60%);
             border-radius: 50%;
             filter: blur(8px);
-            opacity: 0.6;
+            opacity: 0.7;
         }
         
         .tour-orb-label {
@@ -772,7 +772,7 @@
             right: 84px;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(10, 9, 8, 0.95);
+            background: rgba(26, 24, 22, 0.95);
             padding: 12px 16px;
             border-radius: 10px;
             font-size: 0.75rem;
@@ -782,7 +782,7 @@
             opacity: 0;
             transition: all 0.3s ease;
             pointer-events: none;
-            border: 1px solid rgba(248, 204, 116, 0.15);
+            border: 1px solid rgba(248, 204, 116, 0.2);
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
         
@@ -794,9 +794,9 @@
         .tour-orb:hover .tour-orb-sphere { 
             animation-duration: 15s;
             box-shadow: 
-                inset 0 -8px 20px rgba(0, 0, 0, 0.4),
-                inset 0 8px 20px rgba(255, 255, 255, 0.12),
-                0 6px 30px rgba(248, 204, 116, 0.5);
+                inset 0 -8px 20px rgba(0, 0, 0, 0.3),
+                inset 0 8px 20px rgba(255, 255, 255, 0.15),
+                0 6px 30px rgba(248, 204, 116, 0.6);
         }
         
         .tour-orb.touring { 
@@ -811,22 +811,22 @@
         .tour-tooltip {
             position: fixed;
             background: linear-gradient(135deg, 
-                rgba(20, 18, 16, 0.75) 0%, 
-                rgba(15, 14, 13, 0.8) 50%,
-                rgba(18, 16, 14, 0.75) 100%
+                rgba(34, 31, 29, 0.8) 0%, 
+                rgba(26, 24, 22, 0.85) 50%,
+                rgba(30, 27, 25, 0.8) 100%
             );
             backdrop-filter: blur(32px) saturate(180%);
             -webkit-backdrop-filter: blur(32px) saturate(180%);
-            border: 1px solid rgba(248, 204, 116, 0.25);
+            border: 1px solid rgba(248, 204, 116, 0.3);
             border-radius: 20px;
             padding: 28px 32px;
             max-width: 380px;
             z-index: 9999;
             box-shadow: 
-                0 28px 100px rgba(0, 0, 0, 0.8), 
-                0 0 0 1px rgba(248, 204, 116, 0.2),
-                inset 0 1px 3px rgba(255, 255, 255, 0.15),
-                inset 0 -1px 2px rgba(0, 0, 0, 0.2);
+                0 28px 100px rgba(0, 0, 0, 0.7), 
+                0 0 0 1px rgba(248, 204, 116, 0.25),
+                inset 0 1px 3px rgba(255, 255, 255, 0.2),
+                inset 0 -1px 2px rgba(0, 0, 0, 0.15);
             opacity: 0;
             transform: translateY(12px);
             transition: opacity 0.2s ease, transform 0.2s ease;
@@ -839,7 +839,7 @@
             inset: 0;
             border-radius: 20px;
             background: radial-gradient(circle at 30% 20%, 
-                rgba(248, 204, 116, 0.12) 0%, 
+                rgba(248, 204, 116, 0.15) 0%, 
                 transparent 50%);
             pointer-events: none;
         }
@@ -850,7 +850,7 @@
             inset: 0;
             border-radius: 20px;
             background: linear-gradient(180deg,
-                rgba(255, 255, 255, 0.08) 0%,
+                rgba(255, 255, 255, 0.1) 0%,
                 transparent 20%,
                 transparent 80%,
                 rgba(0, 0, 0, 0.1) 100%
@@ -869,7 +869,7 @@
             font-weight: 600;
             color: var(--brand);
             margin-bottom: 14px;
-            text-shadow: 0 0 24px rgba(248, 204, 116, 0.4);
+            text-shadow: 0 0 24px rgba(248, 204, 116, 0.5);
             position: relative;
             z-index: 1;
         }
@@ -877,7 +877,7 @@
         .tour-tooltip-text {
             font-size: 0.9rem;
             line-height: 1.7;
-            color: rgba(255, 255, 255, 0.8);
+            color: rgba(255, 255, 255, 0.85);
             margin-bottom: 24px;
             position: relative;
             z-index: 1;
@@ -910,42 +910,42 @@
         }
         
         .tour-btn.skip {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             color: var(--text-muted);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
         }
         
         .tour-btn.skip:hover { 
-            border-color: rgba(255, 255, 255, 0.25); 
+            border-color: rgba(255, 255, 255, 0.3); 
             color: var(--text-secondary);
-            background: rgba(0, 0, 0, 0.6);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 2px 8px rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25), 0 2px 8px rgba(0, 0, 0, 0.3);
         }
         
         .tour-btn.next {
-            background: linear-gradient(135deg, rgba(248, 204, 116, 0.4) 0%, rgba(248, 204, 116, 0.3) 100%);
-            border: 1px solid rgba(248, 204, 116, 0.5);
+            background: linear-gradient(135deg, rgba(248, 204, 116, 0.5) 0%, rgba(248, 204, 116, 0.4) 100%);
+            border: 1px solid rgba(248, 204, 116, 0.6);
             color: var(--brand);
-            box-shadow: 0 4px 14px rgba(248, 204, 116, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.15);
+            box-shadow: 0 4px 14px rgba(248, 204, 116, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.2);
         }
         
         .tour-btn.next:hover { 
-            background: linear-gradient(135deg, rgba(248, 204, 116, 0.5) 0%, rgba(248, 204, 116, 0.4) 100%);
-            box-shadow: 0 6px 18px rgba(248, 204, 116, 0.35), inset 0 1px 3px rgba(255, 255, 255, 0.2);
-            border-color: rgba(248, 204, 116, 0.6);
+            background: linear-gradient(135deg, rgba(248, 204, 116, 0.6) 0%, rgba(248, 204, 116, 0.5) 100%);
+            box-shadow: 0 6px 18px rgba(248, 204, 116, 0.4), inset 0 1px 3px rgba(255, 255, 255, 0.25);
+            border-color: rgba(248, 204, 116, 0.7);
         }
         
         .tour-highlight {
             position: relative;
             z-index: 9998;
-            box-shadow: 0 0 0 4px rgba(248, 204, 116, 0.3), 0 12px 40px rgba(0, 0, 0, 0.4) !important;
+            box-shadow: 0 0 0 4px rgba(248, 204, 116, 0.4), 0 12px 40px rgba(0, 0, 0, 0.4) !important;
         }
         
         .tour-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.35);
+            background: rgba(0, 0, 0, 0.4);
             backdrop-filter: blur(3px);
             -webkit-backdrop-filter: blur(3px);
             z-index: 9997;
@@ -1493,8 +1493,8 @@
         }
         
         // Charts
-        Chart.defaults.color = 'rgba(255, 255, 255, 0.4)';
-        Chart.defaults.borderColor = 'rgba(248, 204, 116, 0.08)';
+        Chart.defaults.color = 'rgba(255, 255, 255, 0.5)';
+        Chart.defaults.borderColor = 'rgba(248, 204, 116, 0.12)';
         
         let revenueChart, cumulativeChart, clientsChart;
         
@@ -1666,11 +1666,11 @@
                 return 'Mo ' + monthNum;
             });
             const brand = '#f8cc74';
-            const brandFill = 'rgba(248, 204, 116, 0.15)';
-            const dim = 'rgba(248, 204, 116, 0.4)';
-            const dimFill = 'rgba(248, 204, 116, 0.06)';
-            const combined = 'rgba(110, 231, 183, 0.5)';
-            const combinedFill = 'rgba(110, 231, 183, 0.1)';
+            const brandFill = 'rgba(248, 204, 116, 0.2)';
+            const dim = 'rgba(248, 204, 116, 0.5)';
+            const dimFill = 'rgba(248, 204, 116, 0.08)';
+            const combined = 'rgba(110, 231, 183, 0.6)';
+            const combinedFill = 'rgba(110, 231, 183, 0.12)';
             
             const opts = { 
                 responsive: true, 
@@ -1678,7 +1678,7 @@
                 plugins: { 
                     legend: { 
                         labels: { 
-                            color: 'rgba(255,255,255,0.5)', 
+                            color: 'rgba(255,255,255,0.6)', 
                             font: { family: "'Inter',sans-serif", size: 11 }, 
                             padding: 14 
                         } 
@@ -1686,13 +1686,13 @@
                 }, 
                 scales: { 
                     x: { 
-                        grid: { color: 'rgba(248,204,116,0.06)' }, 
-                        ticks: { color: 'rgba(255,255,255,0.3)', font: { size: 10 } } 
+                        grid: { color: 'rgba(248,204,116,0.08)' }, 
+                        ticks: { color: 'rgba(255,255,255,0.4)', font: { size: 10 } } 
                     }, 
                     y: { 
-                        grid: { color: 'rgba(248,204,116,0.06)' }, 
+                        grid: { color: 'rgba(248,204,116,0.08)' }, 
                         ticks: { 
-                            color: 'rgba(255,255,255,0.3)', 
+                            color: 'rgba(255,255,255,0.4)', 
                             font: { size: 10 }, 
                             callback: v => '$' + v.toLocaleString() 
                         }, 
@@ -1752,7 +1752,7 @@
                         {
                             label: 'Up-front',
                             data: data.map(d => d.oldClients),
-                            backgroundColor: 'rgba(248, 204, 116, 0.3)',
+                            backgroundColor: 'rgba(248, 204, 116, 0.35)',
                             borderColor: dim,
                             borderWidth: 1.5,
                             borderRadius: 6
@@ -1760,7 +1760,7 @@
                         { 
                             label: 'Subscription', 
                             data: data.map(d => d.activeClients), 
-                            backgroundColor: 'rgba(248, 204, 116, 0.5)', 
+                            backgroundColor: 'rgba(248, 204, 116, 0.6)', 
                             borderColor: brand, 
                             borderWidth: 1.5, 
                             borderRadius: 6 
